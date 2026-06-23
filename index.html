@@ -131,85 +131,11 @@
 </script>
 <!-- نهاية الجزء الأول – بدون إغلاق html/body -->
 
-
-  <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سكريبت البيتكوين - الجزء الثاني</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #0f0f1a;
-            font-family: 'Cairo', sans-serif;
-            padding: 30px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #e8e2d4;
-        }
-        .container {
-            max-width: 920px;
-            width: 100%;
-            background-color: #18182b;
-            border-radius: 28px;
-            padding: 35px 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            border: 1px solid #2e2e48;
-        }
-        .part-badge {
-            background-color: #2a2a42;
-            display: inline-block;
-            padding: 5px 18px;
-            border-radius: 40px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #f0c27f;
-            border: 1px solid #f5b04233;
-            margin-bottom: 15px;
-        }
-        .script-box {
-            background-color: #26263b;
-            padding: 20px 25px;
-            border-radius: 14px;
-            border: 1px solid #3c3c57;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
-            line-height: 2;
-            font-size: 18px;
-            color: #e8e2d4;
-            direction: rtl;
-            text-align: right;
-            max-height: 700px;
-            overflow-y: auto;
-        }
-        .script-box p { margin-bottom: 14px; }
-        .script-box h3 { color: #f5b042; font-size: 22px; margin: 20px 0 8px 0; border-right: 4px solid #f5b042; padding-right: 15px; }
-        .script-box h4 { color: #e0b07a; font-size: 20px; margin: 16px 0 6px 0; }
-        .script-box strong { color: #f3cfa8; }
-        .script-box .highlight-box { background-color: #2f2f4a; padding: 10px 16px; border-radius: 12px; border-right: 4px solid #f5b042; margin: 12px 0; }
-        .btn-copy {
-            background-color: #2d2d44;
-            border: none;
-            padding: 8px 22px;
-            border-radius: 30px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 15px;
-            color: #f0e9db;
-            cursor: pointer;
-            border: 1px solid #44445e;
-            margin-top: 15px;
-            transition: 0.2s;
-        }
-        .btn-copy:hover { background-color: #3d3d5c; border-color: #f5b042; }
-        @media print { .btn-copy { display: none; } }
-    </style>
-</head>
-<body>
-<div class="container">
-    <span class="part-badge">📘 الجزء الثاني</span>
+<div class="part-container">
+    <div class="part-header">
+        <span class="part-badge">📘 الجزء الثاني</span>
+        <button class="copy-part-btn" onclick="copyPart('part2')">📋 نسخ هذا الجزء</button>
+    </div>
     <div class="script-box" id="part2">
 
         <p style="font-size: 20px; font-weight: 700; color: #f5b042; text-align: center; border-bottom: 1px solid #3c3c57; padding-bottom: 10px;">اختراق الأجهزة للتعدين الخبيث (Cryptojacking)</p>
@@ -237,19 +163,11 @@
 
         <div class="highlight-box"><strong>خلاصة الأمان:</strong> البيتكوين آمن في البروتوكول، لكن الأضعف هو الإنسان. أي هجمة ناجحة بتعتمد على غلطة من المستخدم. خليك واعي، وبلاش تضغط على أي روابط مش متأكد منها، وخلي المفتاح الخاص في مكان آمن جداً.</div>
 
-        <p>النقطة دي مهمة جداً: احنا اتكلمنا عن إزاي الهاكرز بيهاجموا النظام والمستخدمين. لكن فيه حاجة تانية لازم تفهمها، وهي إزاي تحفظ فلوسك بنفسك. المحافظ الرقمية ليها أنواع، وفيه فرق كبير بين المحافظ الساخنة والباردة. وبردو فيه موضوع الخصوصية: هل البيتكوين مجهول بالظبط؟ ولا إحنا نقدر نتتبع المعاملات؟ وإيه هي أدوات الخلط (Mixers)؟ وكل ده هنتكلم فيه بالتفصيل في اللي جاي.</p>
+        <p>ده الجزء الخاص بالهجمات السيبرانية. النقطة الجاية هنتكلم فيها عن المحافظ الرقمية، الفرق بين الساخنة والباردة، وإزاي تختار المحفظة المناسبة، وإيه كارثة ضياع المفتاح الخاص. وبردو هنتكلم عن الخصوصية: هل البيتكوين مجهول بالظبط؟ ولا إحنا نقدر نتتبع المعاملات؟ وإيه هي أدوات الخلط (Mixers)؟ وكل ده بالتفصيل في اللي جاي.</p>
 
-        <button class="btn-copy" onclick="copyPart()">📋 نسخ هذا الجزء</button>
     </div>
 </div>
-<script>
-    function copyPart() {
-        const box = document.getElementById('part2');
-        const text = box.innerText.replace('📋 نسخ هذا الجزء', '').trim();
-        navigator.clipboard.writeText(text).then(() => alert('✅ تم نسخ الجزء الثاني بنجاح!'));
-    }
-</script>
-<!-- نهاية الجزء الثاني – بدون إغلاق html/body -->
 
 
+    
   
