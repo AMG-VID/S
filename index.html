@@ -335,7 +335,39 @@
         <p style="text-align: center; color: #6a6480; font-size: 15px; border-top: 1px solid #2a2a3f; padding-top: 15px;">🏁 انتهى السكريبت – شكراً لمشاهدتك</p>
 
 
+
+
+
+                        <!-- زر تحميل PDF -->
+        <div style="text-align: center; margin-top: 35px; border-top: 1px solid #2a2a3f; padding-top: 25px;">
+            <button onclick="downloadPDF()" style="
+                background-color: #f5b042;
+                border: none;
+                padding: 14px 40px;
+                border-radius: 50px;
+                font-family: 'Cairo', sans-serif;
+                font-weight: 700;
+                font-size: 20px;
+                color: #12121c;
+                cursor: pointer;
+                transition: 0.3s;
+                box-shadow: 0 4px 12px rgba(245, 176, 66, 0.3);
+                border: 1px solid #f5b042;
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+            " onmouseover="this.style.backgroundColor='#ffc25c'; this.style.transform='scale(1.03)';" onmouseout="this.style.backgroundColor='#f5b042'; this.style.transform='scale(1)';">
+                ⬇️ تحميل السكريبت كـ PDF
+            </button>
+            <p style="color: #7a7490; font-size: 15px; margin-top: 12px;">📍 هيتم فتح نافذة الطباعة، اختار "حفظ كـ PDF" من الخيارات</p>
+        </div>
+
                 </div> <!-- إغلاق script-box -->
 </div> <!-- إغلاق container -->
+<script>
+    function downloadPDF() {
+        window.print();
+    }
+</script>
 </body>
     </html>
