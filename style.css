@@ -1,0 +1,196 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f0f4f8;
+  color: #1a2332;
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+header p { opacity: 0.9; font-size: 0.95rem; }
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: #e2e8f0;
+  color: #1a2332;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.tab:hover { background: #cbd5e1; }
+.tab.active { background: #0d9488; color: white; }
+
+main {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.controls input, .controls select {
+  padding: 0.7rem 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.controls input { flex: 1; min-width: 250px; }
+.controls input:focus, .controls select:focus {
+  outline: none;
+  border-color: #0d9488;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-top: 4px solid #0d9488;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(13,148,136,0.2);
+}
+
+.card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; color: #0f766e; }
+.card .formula {
+  font-family: 'Courier New', monospace;
+  background: #f1f5f9;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+.card .badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: #ccfbf1;
+  color: #115e59;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+.card .meta {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+.modal.show { display: flex; align-items: flex-start; justify-content: center; }
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #64748b;
+  line-height: 1;
+}
+.close:hover { color: #dc2626; }
+
+.modal-content h2 { color: #0f766e; margin-bottom: 1rem; }
+.modal-content .section { margin-bottom: 1.2rem; }
+.modal-content .section h3 {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+.modal-content .section p { font-size: 1rem; }
+.modal-content .section ul { padding-right: 1.5rem; }
+
+.safety-list {
+  list-style: none;
+  padding: 0;
+}
+.safety-list li {
+  background: white;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.6rem;
+  border-radius: 8px;
+  border-right: 4px solid #dc2626;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+#about p { margin-bottom: 0.8rem; background: white; padding: 1rem; border-radius: 8px; }
+#about strong { color: #0f766e; }
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.4rem; }
+  .modal-content { padding: 1.5rem; }
+  .grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .card { padding: 0.8rem; }
+  .card h3 { font-size: 0.95rem; }
+}
