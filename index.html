@@ -2,1582 +2,467 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <title>معمل الفيزياء التفاعلي | Interactive Physics Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Great+Vibes&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Great+Vibes&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+:root{--bg:#0a0e1a;--pn:#0f172a;--ac:#38bdf8;--ac2:#a78bfa;--tx:#e2e8f0;--mu:#94a3b8;--bd:rgba(56,189,248,.2);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Cairo',sans-serif;background:#0a0e1a;color:#e2e8f0;min-height:100vh;line-height:1.6}
-
-/* ===== Header ===== */
-header{
-  background:linear-gradient(135deg,#1e1b4b 0%,#0f172a 50%,#0c4a6e 100%);
-  padding:2rem 1rem 2.5rem;
-  position:relative;
-  overflow:hidden;
-  border-bottom:1px solid rgba(56,189,248,.2);
-}
-header::before{
-  content:'';
-  position:absolute;inset:0;
-  background:radial-gradient(circle at 20% 50%,rgba(56,189,248,.15),transparent 50%),
-             radial-gradient(circle at 80% 50%,rgba(139,92,246,.15),transparent 50%);
-  pointer-events:none;
-}
-.header-inner{max-width:1200px;margin:0 auto;position:relative;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap}
-.title-block{flex:1;min-width:250px}
-h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#38bdf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3rem}
-.subtitle{color:#94a3b8;font-size:.95rem;letter-spacing:.5px}
-.tagline{color:#64748b;font-size:.85rem;margin-top:.5rem}
-
-/* ===== Signature ===== */
-.signature{
-  text-align:center;
-  padding:.8rem 1.5rem;
-  border:1px solid rgba(56,189,248,.3);
-  border-radius:16px;
-  background:rgba(15,23,42,.6);
-  backdrop-filter:blur(10px);
-  position:relative;
-}
-.signature::before{
-  content:'';
-  position:absolute;inset:0;
-  border-radius:16px;
-  padding:1px;
-  background:linear-gradient(135deg,rgba(56,189,248,.4),rgba(139,92,246,.4));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.sig-label{font-size:.7rem;color:#64748b;letter-spacing:3px;text-transform:uppercase;margin-bottom:.3rem}
-.sig-ar{font-family:'Aref Ruqaa',serif;font-size:1.9rem;font-weight:700;color:#38bdf8;line-height:1.2;text-shadow:0 0 20px rgba(56,189,248,.4)}
-.sig-en{font-family:'Great Vibes',cursive;font-size:1.6rem;color:#a78bfa;line-height:1;margin-top:.2rem;text-shadow:0 0 20px rgba(139,92,246,.4)}
-
-/* ===== Nav ===== */
-nav{
-  background:#0f172a;
-  border-bottom:1px solid rgba(56,189,248,.15);
-  position:sticky;top:0;z-index:100;
-  overflow-x:auto;
-  box-shadow:0 4px 20px rgba(0,0,0,.3);
-}
-nav::-webkit-scrollbar{height:4px}
-nav::-webkit-scrollbar-thumb{background:#38bdf8;border-radius:2px}
-.nav-inner{max-width:1200px;margin:0 auto;display:flex;gap:.5rem;padding:.8rem 1rem;min-width:max-content}
-.tab{
-  padding:.6rem 1.1rem;
-  border:none;
-  background:rgba(30,41,59,.7);
-  color:#94a3b8;
-  border-radius:8px;
-  cursor:pointer;
-  font-family:inherit;
-  font-size:.85rem;
-  font-weight:600;
-  transition:all .25s;
-  white-space:nowrap;
-  border:1px solid transparent;
-}
-.tab:hover{background:rgba(56,189,248,.15);color:#38bdf8}
-.tab.active{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;border-color:transparent;box-shadow:0 4px 15px rgba(14,165,233,.4)}
-
-/* ===== Main ===== */
-main{max-width:1200px;margin:2rem auto;padding:0 1rem}
-.panel{display:none;animation:fadeIn .4s ease}
-.panel.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-.panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(56,189,248,.15)}
-.panel-header h2{font-size:1.4rem;color:#38bdf8;margin-bottom:.4rem}
-.panel-header p{color:#94a3b8;font-size:.9rem}
-
-.exp-layout{display:grid;grid-template-columns:1fr 320px;gap:1.5rem}
-@media(max-width:900px){.exp-layout{grid-template-columns:1fr}}
-
-.canvas-wrap{
-  position:relative;
-  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
-  border-radius:16px;
-  overflow:hidden;
-  border:1px solid rgba(56,189,248,.2);
-  height:450px;
-  box-shadow:inset 0 0 60px rgba(0,0,0,.5);
-}
-@media(max-width:900px){.canvas-wrap{height:320px}}
-.canvas-wrap canvas{width:100%;height:100%;display:block}
-
-.controls{
-  background:rgba(15,23,42,.7);
-  border:1px solid rgba(56,189,248,.2);
-  border-radius:16px;
-  padding:1.2rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-}
-.ctrl-group{display:flex;flex-direction:column;gap:.4rem}
-.ctrl-group label{
-  font-size:.85rem;
-  color:#94a3b8;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.ctrl-group label span{color:#38bdf8;font-weight:600;font-family:'Courier New',monospace}
-input[type="range"]{
-  width:100%;
-  height:6px;
-  background:#1e293b;
-  border-radius:3px;
-  outline:none;
-  -webkit-appearance:none;
-  appearance:none;
-  cursor:pointer;
-}
-input[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  width:18px;height:18px;
-  background:linear-gradient(135deg,#0ea5e9,#8b5cf6);
-  border-radius:50%;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(14,165,233,.6);
-}
-input[type="range"]::-moz-range-thumb{
-  width:18px;height:18px;
-  background:linear-gradient(135deg,#0ea5e9,#8b5cf6);
-  border-radius:50%;
-  cursor:pointer;
-  border:none;
-  box-shadow:0 0 10px rgba(14,165,233,.6);
-}
-.readout{
-  background:rgba(2,6,23,.6);
-  border:1px solid rgba(56,189,248,.2);
-  border-radius:10px;
-  padding:.8rem;
-  font-family:'Courier New',monospace;
-  font-size:.85rem;
-  color:#38bdf8;
-  line-height:1.8;
-}
-.readout strong{color:#a78bfa}
-.btn{
-  padding:.7rem 1.2rem;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-family:inherit;
-  font-weight:600;
-  font-size:.9rem;
-  transition:all .2s;
-}
-.btn-primary{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;box-shadow:0 4px 15px rgba(14,165,233,.4)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(14,165,233,.6)}
-.btn-secondary{background:rgba(30,41,59,.8);color:#94a3b8;border:1px solid rgba(56,189,248,.2)}
-.btn-secondary:hover{background:rgba(56,189,248,.15);color:#38bdf8}
-
-footer{
-  text-align:center;
-  padding:2.5rem 1rem;
-  margin-top:3rem;
-  border-top:1px solid rgba(56,189,248,.1);
-  color:#64748b;
-  font-size:.85rem;
-}
-.footer-sig{
-  margin-top:1rem;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:1.5rem;
-  flex-wrap:wrap;
-}
-.footer-sig .sig-ar{font-size:1.4rem;color:#38bdf8}
-.footer-sig .sig-en{font-size:1.2rem;color:#a78bfa}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--pn);z-index:10}
+header{background:linear-gradient(135deg,#1e1b4b,#0f172a 50%,#0c4a6e);padding:1.5rem 1rem;border-bottom:1px solid var(--bd)}
+.hi{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+h1{font-size:1.7rem;background:linear-gradient(135deg,#38bdf8,#a78bfa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.st{color:var(--mu);font-size:.9rem}.tg{color:#64748b;font-size:.82rem}
+.sig{text-align:center;padding:.6rem 1.3rem;border:1px solid var(--bd);border-radius:16px;background:rgba(15,23,42,.6)}
+.sl{font-size:.68rem;color:#64748b;letter-spacing:2px}
+.sa{font-family:'Aref Ruqaa',serif;font-size:1.8rem;color:var(--ac);line-height:1.2;text-shadow:0 0 18px rgba(56,189,248,.4)}
+.se{font-family:'Great Vibes',cursive;font-size:1.5rem;color:var(--ac2);line-height:1.1}
+nav{background:var(--pn);border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);z-index:20;overflow-x:auto;white-space:nowrap;padding:.6rem .8rem;display:flex;gap:.4rem}
+.tab,.chip,.btn{font-family:inherit;cursor:pointer;border:1px solid transparent;transition:.2s}
+.tab{padding:.5rem .9rem;border-radius:8px;background:rgba(30,41,59,.8);color:var(--mu);font-size:.82rem;font-weight:600;flex:none}
+.tab i{font-style:normal;opacity:.6;font-size:.7rem}
+.tab.on{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff}
+main{max-width:1200px;margin:1rem auto;padding:0 .8rem}
+.lst{display:flex;flex-wrap:wrap;gap:.4rem;max-height:116px;overflow-y:auto;padding:.4rem;border:1px solid var(--bd);border-radius:12px;background:rgba(15,23,42,.5)}
+.chip{padding:.3rem .7rem;border-radius:20px;background:rgba(30,41,59,.8);color:var(--mu);font-size:.78rem}
+.chip.on{background:rgba(56,189,248,.2);color:var(--ac);border-color:var(--ac)}
+.ph{margin:.9rem 0 .6rem}.ph h2{font-size:1.2rem;color:var(--ac)}
+.eq{color:var(--ac2);font-family:'Courier New',monospace;font-size:.9rem;direction:ltr;text-align:right;min-height:1.4em}
+.stage{display:grid;gap:1rem;grid-template-columns:1fr}
+@media(min-width:900px){.stage{grid-template-columns:1fr 340px}}
+.cw{background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
+canvas{display:block;width:100%;height:380px;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.hint{padding:.4rem .8rem;font-size:.78rem;color:#64748b;border-top:1px solid rgba(56,189,248,.1)}
+.side{display:flex;flex-direction:column;gap:.8rem}
+.ctl,.out{background:rgba(15,23,42,.7);border:1px solid var(--bd);border-radius:16px;padding:.9rem;display:flex;flex-direction:column;gap:.7rem}
+.ctl:empty{display:none}
+.cg label{font-size:.84rem;color:var(--mu);display:flex;justify-content:space-between;gap:.5rem}
+.cg b{color:var(--ac);font-family:'Courier New',monospace;direction:ltr;font-weight:600}
+input[type=range]{width:100%;height:6px;background:#1e293b;border-radius:3px;-webkit-appearance:none;appearance:none;margin-top:.5rem}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#8b5cf6);box-shadow:0 0 10px rgba(14,165,233,.6)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#8b5cf6)}
+.out div{display:flex;justify-content:space-between;gap:.5rem;font-size:.84rem;border-bottom:1px dashed rgba(56,189,248,.12);padding-bottom:.2rem}
+.out span{color:var(--mu)}.out b{color:var(--ac);font-family:'Courier New',monospace;direction:ltr;text-align:left}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.btn{padding:.65rem;border-radius:10px;background:rgba(30,41,59,.8);color:var(--mu);font-weight:600;font-size:.88rem;border-color:var(--bd)}
+.btn.p{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;border:none}
+footer{text-align:center;padding:2rem 1rem;margin-top:2rem;border-top:1px solid rgba(56,189,248,.1);color:#64748b;font-size:.85rem}
+.fs{margin-top:.8rem;display:flex;justify-content:center;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.fs .sa{font-size:1.4rem}.fs .se{font-size:1.2rem}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="header-inner">
-    <div class="title-block">
-      <h1>معمل الفيزياء التفاعلي</h1>
-      <p class="subtitle">Interactive Physics Laboratory</p>
-      <p class="tagline">10 تجارب فيزيائية حقيقية — للطلاب والمهندسين</p>
-    </div>
-    <div class="signature">
-      <div class="sig-label">إشراف وتصميم</div>
-      <div class="sig-ar">أمجد موسي</div>
-      <div class="sig-en">Amgad Mousa</div>
-    </div>
-  </div>
-</header>
-
-<nav>
-  <div class="nav-inner">
-    <button class="tab active" data-tab="freefall">⬇️ السقوط الحر</button>
-    <button class="tab" data-tab="projectile">🎯 المقذوفات</button>
-    <button class="tab" data-tab="pendulum">⏱️ البندول</button>
-    <button class="tab" data-tab="spring">🌀 النابض</button>
-    <button class="tab" data-tab="ohms">⚡ قانون أوم</button>
-    <button class="tab" data-tab="refraction">💡 الانكسار</button>
-    <button class="tab" data-tab="lens">🔍 العدسة</button>
-    <button class="tab" data-tab="waves">🌊 التداخل</button>
-    <button class="tab" data-tab="gas">🫧 قانون بويل</button>
-    <button class="tab" data-tab="newton">📦 قانون نيوتن</button>
-  </div>
-</nav>
-
+<header><div class="hi"><div><h1>معمل الفيزياء التفاعلي</h1><p class="st">Interactive Physics Laboratory</p><p class="tg" id="tg"></p></div>
+<div class="sig"><div class="sl">إشراف وتصميم</div><div class="sa">أمجد موسي</div><div class="se">Amgad Mousa</div></div></div></header>
+<nav id="cats"></nav>
 <main>
-
-<!-- 1. Free Fall -->
-<section id="freefall" class="panel active">
-  <div class="panel-header">
-    <h2>⬇️ السقوط الحر</h2>
-    <p>ادرس حركة جسم يسقط تحت تأثير الجاذبية، مع وبدون مقاومة الهواء.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="ffCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>عجلة الجاذبية g <span id="ffGval">9.8 m/s²</span></label>
-        <input type="range" id="ffGravity" min="1" max="20" step="0.1" value="9.8">
-      </div>
-      <div class="ctrl-group">
-        <label><span>مقاومة الهواء</span><input type="checkbox" id="ffAir" style="transform:scale(1.3)"></label>
-      </div>
-      <div class="ctrl-group">
-        <label>الارتفاع الابتدائي h₀ <span id="ffHval">100 m</span></label>
-        <input type="range" id="ffHeight" min="20" max="200" step="10" value="100">
-      </div>
-      <div class="readout" id="ffReadout">
-        الزمن: <strong>0.00</strong> s<br>
-        السرعة: <strong>0.00</strong> m/s<br>
-        الارتفاع: <strong>100.00</strong> m
-      </div>
-      <button class="btn btn-primary" onclick="ff.reset()">🔄 إعادة السقوط</button>
-    </div>
-  </div>
-</section>
-
-<!-- 2. Projectile -->
-<section id="projectile" class="panel">
-  <div class="panel-header">
-    <h2>🎯 حركة المقذوفات</h2>
-    <p>ادرس مسار جسم يُقذف بزاوية وسرعة ابتدائية، واحسب المدى والارتفاع الأقصى.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="projCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>زاوية الإطلاق θ <span id="projAval">45°</span></label>
-        <input type="range" id="projAngle" min="5" max="85" step="1" value="45">
-      </div>
-      <div class="ctrl-group">
-        <label>السرعة الابتدائية v₀ <span id="projVval">30 m/s</span></label>
-        <input type="range" id="projVel" min="5" max="60" step="1" value="30">
-      </div>
-      <div class="readout" id="projReadout">
-        المدى R: <strong>0</strong> m<br>
-        أقصى ارتفاع H: <strong>0</strong> m<br>
-        زمن الطيران T: <strong>0</strong> s
-      </div>
-      <button class="btn btn-primary" onclick="proj.launch()">🚀 أطلق!</button>
-      <button class="btn btn-secondary" onclick="proj.reset()">مسح</button>
-    </div>
-  </div>
-</section>
-
-<!-- 3. Pendulum -->
-<section id="pendulum" class="panel">
-  <div class="panel-header">
-    <h2>⏱️ البندول البسيط</h2>
-    <p>ادرس الحركة التوافقية للبندول، وقس الزمن الدوري بدقة.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="pendCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>طول الخيط L <span id="pendLval">1.0 m</span></label>
-        <input type="range" id="pendLength" min="0.3" max="2.5" step="0.1" value="1.0">
-      </div>
-      <div class="ctrl-group">
-        <label>الجاذبية g <span id="pendGval">9.8 m/s²</span></label>
-        <input type="range" id="pendGravity" min="1" max="20" step="0.1" value="9.8">
-      </div>
-      <div class="ctrl-group">
-        <label>زاوية البداية θ₀ <span id="pendAval">30°</span></label>
-        <input type="range" id="pendAngle" min="5" max="80" step="1" value="30">
-      </div>
-      <div class="readout" id="pendReadout">
-        الزمن الدوري T: <strong>0.00</strong> s<br>
-        الزاوية الحالية: <strong>0.0</strong>°<br>
-        السرعة الزاوية ω: <strong>0.00</strong> rad/s
-      </div>
-      <button class="btn btn-primary" onclick="pend.reset()">🔄 إعادة</button>
-    </div>
-  </div>
-</section>
-
-<!-- 4. Spring -->
-<section id="spring" class="panel">
-  <div class="panel-header">
-    <h2>🌀 الحركة التوافقية للنابض</h2>
-    <p>ادرس تذبذب كتلة معلقة بنابض، واحسب التردد والزمن الدوري.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="springCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>الكتلة m <span id="sprMval">0.5 kg</span></label>
-        <input type="range" id="sprMass" min="0.1" max="3" step="0.1" value="0.5">
-      </div>
-      <div class="ctrl-group">
-        <label>ثابت النابض k <span id="sprKval">20 N/m</span></label>
-        <input type="range" id="sprK" min="5" max="100" step="1" value="20">
-      </div>
-      <div class="ctrl-group">
-        <label>السعة A <span id="sprAval">0.8 m</span></label>
-        <input type="range" id="sprAmp" min="0.2" max="1.5" step="0.1" value="0.8">
-      </div>
-      <div class="readout" id="sprReadout">
-        التردد الزاوي ω: <strong>0.00</strong> rad/s<br>
-        الزمن الدوري T: <strong>0.00</strong> s<br>
-        التردد f: <strong>0.00</strong> Hz
-      </div>
-      <button class="btn btn-primary" onclick="spr.reset()">🔄 إعادة</button>
-    </div>
-  </div>
-</section>
-
-<!-- 5. Ohm's Law -->
-<section id="ohms" class="panel">
-  <div class="panel-header">
-    <h2>⚡ قانون أوم</h2>
-    <p>ادرس العلاقة بين الجهد والتيار والمقاومة في دائرة كهربائية بسيطة.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="ohmsCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>الجهد V <span id="ohmVval">12 V</span></label>
-        <input type="range" id="ohmVoltage" min="1" max="24" step="0.5" value="12">
-      </div>
-      <div class="ctrl-group">
-        <label>المقاومة R <span id="ohmRval">6 Ω</span></label>
-        <input type="range" id="ohmResistance" min="1" max="100" step="1" value="6">
-      </div>
-      <div class="readout" id="ohmReadout">
-        التيار I = V/R: <strong>2.00</strong> A<br>
-        القدرة P = V·I: <strong>24.0</strong> W<br>
-        الطاقة/ث P: <strong>24.0</strong> J/s
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 6. Refraction -->
-<section id="refraction" class="panel">
-  <div class="panel-header">
-    <h2>💡 انكسار الضوء — قانون سنيل</h2>
-    <p>ادرس انكسار الضوء بين وسطين، وزاوية الانعكاس الكلي.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="refrCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>زاوية السقوط θ₁ <span id="refrAval">30°</span></label>
-        <input type="range" id="refrAngle" min="0" max="89" step="1" value="30">
-      </div>
-      <div class="ctrl-group">
-        <label>معامل انكسار الوسط 1 n₁ <span id="refrN1val">1.00</span></label>
-        <input type="range" id="refrN1" min="1" max="2.5" step="0.01" value="1.00">
-      </div>
-      <div class="ctrl-group">
-        <label>معامل انكسار الوسط 2 n₂ <span id="refrN2val">1.33</span></label>
-        <input type="range" id="refrN2" min="1" max="2.5" step="0.01" value="1.33">
-      </div>
-      <div class="readout" id="refrReadout">
-        زاوية الانكسار θ₂: <strong>0</strong>°<br>
-        الزاوية الحرجة: <strong>—</strong><br>
-        <span id="refrStatus" style="color:#22d3ee">انتقال طبيعي</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. Lens -->
-<section id="lens" class="panel">
-  <div class="panel-header">
-    <h2>🔍 العدسة المحدبة — الرسم الشعاعي</h2>
-    <p>ادرس تكوين الصور في العدسة المحدبة وحساب التكبير.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="lensCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>البعد البؤري f <span id="lensFval">50 cm</span></label>
-        <input type="range" id="lensF" min="20" max="120" step="5" value="50">
-      </div>
-      <div class="ctrl-group">
-        <label>بُعد الجسم dₒ <span id="lensDval">100 cm</span></label>
-        <input type="range" id="lensD" min="10" max="300" step="5" value="100">
-      </div>
-      <div class="ctrl-group">
-        <label>ارتفاع الجسم hₒ <span id="lensHval">30 cm</span></label>
-        <input type="range" id="lensH" min="10" max="60" step="5" value="30">
-      </div>
-      <div class="readout" id="lensReadout">
-        بُعد الصورة dᵢ: <strong>0</strong> cm<br>
-        التكبير m: <strong>0</strong><br>
-        نوع الصورة: <strong>—</strong>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 8. Wave Interference -->
-<section id="waves" class="panel">
-  <div class="panel-header">
-    <h2>🌊 تداخل الأمواج</h2>
-    <p>ادرس أنماط التداخل البنّاء والهدّام من مصدرين موجيين.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="waveCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>التردد f <span id="waveFval">1.0 Hz</span></label>
-        <input type="range" id="waveFreq" min="0.2" max="3" step="0.1" value="1.0">
-      </div>
-      <div class="ctrl-group">
-        <label>المسافة بين المصدرين d <span id="waveDval">80 px</span></label>
-        <input type="range" id="waveSep" min="30" max="200" step="5" value="80">
-      </div>
-      <div class="ctrl-group">
-        <label>سرعة الموجة v <span id="waveVval">100 px/s</span></label>
-        <input type="range" id="waveVel" min="30" max="200" step="10" value="100">
-      </div>
-      <div class="readout" id="waveReadout">
-        الطول الموجي λ = v/f: <strong>100</strong> px<br>
-        عدد الخطوط العقدية: <strong>3</strong>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 9. Boyle's Law -->
-<section id="gas" class="panel">
-  <div class="panel-header">
-    <h2>🫧 قانون بويل للغازات</h2>
-    <p>ادرس العلاقة بين ضغط الغاز وحجمه عند ثبوت درجة الحرارة (P ∝ 1/V).</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="gasCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>حجم الغاز V <span id="gasVval">100%</span></label>
-        <input type="range" id="gasVol" min="25" max="100" step="1" value="100">
-      </div>
-      <div class="ctrl-group">
-        <label>درجة الحرارة T <span id="gasTval">300 K</span></label>
-        <input type="range" id="gasTemp" min="200" max="500" step="10" value="300">
-      </div>
-      <div class="readout" id="gasReadout">
-        الضغط P: <strong>1.00</strong> atm<br>
-        P·V: <strong>1.00</strong><br>
-        عدد الجزيئات: <strong>ثابت</strong>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 10. Newton's 2nd Law -->
-<section id="newton" class="panel">
-  <div class="panel-header">
-    <h2>📦 قانون نيوتن الثاني (F = ma)</h2>
-    <p>ادرس تأثير القوة والكتلة والاحتكاك على تسارع جسم وحركته.</p>
-  </div>
-  <div class="exp-layout">
-    <div class="canvas-wrap"><canvas id="newtonCanvas"></canvas></div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>القوة المؤثرة F <span id="nwtFval">20 N</span></label>
-        <input type="range" id="nwtForce" min="0" max="100" step="1" value="20">
-      </div>
-      <div class="ctrl-group">
-        <label>الكتلة m <span id="nwtMval">2 kg</span></label>
-        <input type="range" id="nwtMass" min="0.5" max="10" step="0.1" value="2">
-      </div>
-      <div class="ctrl-group">
-        <label>معامل الاحتكاك μ <span id="nwtMuval">0.1</span></label>
-        <input type="range" id="nwtMu" min="0" max="1" step="0.05" value="0.1">
-      </div>
-      <div class="readout" id="nwtReadout">
-        التسارع a = (F-μmg)/m: <strong>0.00</strong> m/s²<br>
-        السرعة v: <strong>0.00</strong> m/s<br>
-        المسافة: <strong>0.00</strong> m
-      </div>
-      <button class="btn btn-primary" onclick="nwt.reset()">🔄 إعادة</button>
-    </div>
-  </div>
-</section>
-
+<div id="lst" class="lst"></div>
+<div class="ph"><h2 id="ttl"></h2><p class="eq" id="eq"></p></div>
+<div class="stage">
+<div class="cw"><canvas id="cv"></canvas><p class="hint" id="hint"></p></div>
+<div class="side"><div class="ctl" id="ctl"></div><div class="out" id="out"></div>
+<div class="btns"><button class="btn p" id="rs">🔄 إعادة التشغيل</button><button class="btn" id="pp">⏸ إيقاف</button><button class="btn" id="pv">‹ السابقة</button><button class="btn" id="nx">التالية ›</button></div></div>
+</div>
 </main>
-
-<footer>
-  <p>معمل الفيزياء التفاعلي — تجارب حقيقية في متصفحك</p>
-  <div class="footer-sig">
-    <span class="sig-ar">أمجد موسي</span>
-    <span class="sig-en">Amgad Mousa</span>
-  </div>
-</footer>
+<footer><p>معمل الفيزياء التفاعلي — جرّب بنفسك، حرّك الأجسام بإصبعك أو بالماوس</p>
+<div class="fs"><span class="sa">أمجد موسي</span><span class="se">Amgad Mousa</span></div></footer>
 
 <script>
-// ========== أدوات مساعدة ==========
-function getCtx(canvasId){
-  const c = document.getElementById(canvasId);
-  const dpr = window.devicePixelRatio || 1;
-  const rect = c.getBoundingClientRect();
-  c.width = rect.width * dpr;
-  c.height = rect.height * dpr;
-  const ctx = c.getContext('2d');
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  return { ctx, w: rect.width, h: rect.height, canvas: c };
-}
-
-function drawGrid(ctx,w,h,step=40){
-  ctx.strokeStyle='rgba(56,189,248,.06)';
-  ctx.lineWidth=1;
-  for(let x=0;x<w;x+=step){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
-  for(let y=0;y<h;y+=step){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
-}
-
-let activeExp = null;
-let lastT = 0;
-function loop(t){
-  const dt = Math.min((t-lastT)/1000, 0.05);
-  lastT = t;
-  if(activeExp && activeExp.update){
-    activeExp.update(dt);
-    activeExp.draw();
-  }
-  requestAnimationFrame(loop);
-}
-requestAnimationFrame(loop);
-
-// ========== 1. Free Fall ==========
-const ff = (() => {
-  const {ctx,w,h} = getCtx('ffCanvas');
-  let state = { t:0, y:0, v:0, done:false, trail:[] };
-  let g = 9.8, air = false, h0 = 100;
-
-  const readout = document.getElementById('ffReadout');
-  const gSlider = document.getElementById('ffGravity');
-  const hSlider = document.getElementById('ffHeight');
-  const airBox = document.getElementById('ffAir');
-  const gVal = document.getElementById('ffGval');
-  const hVal = document.getElementById('ffHval');
-
-  gSlider.oninput = () => { g = +gSlider.value; gVal.textContent = g.toFixed(1)+' m/s²'; };
-  hSlider.oninput = () => { h0 = +hSlider.value; hVal.textContent = h0+' m'; reset(); };
-  airBox.onchange = () => { air = airBox.checked; reset(); };
-
-  function reset(){ state = { t:0, y:0, v:0, done:false, trail:[] }; }
-
-  function update(dt){
-    if(state.done) return;
-    state.t += dt;
-    const term = 25; // terminal velocity
-    let a = g;
-    if(air) a = g * (1 - state.v/term);
-    state.v += a*dt;
-    state.y += state.v*dt;
-    if(state.y >= h0){ state.y = h0; state.done = true; }
-    state.trail.push(state.y);
-    if(state.trail.length > 100) state.trail.shift();
-    readout.innerHTML = `الزمن: <strong>${state.t.toFixed(2)}</strong> s<br>السرعة: <strong>${state.v.toFixed(2)}</strong> m/s<br>الارتفاع: <strong>${(h0-state.y).toFixed(2)}</strong> m`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-    const pad = 40;
-    const scale = (h - pad*2) / h0;
-    const ballX = w/2;
-    const ballY = pad + state.y*scale;
-
-    // ground
-    ctx.fillStyle='#1e293b';
-    ctx.fillRect(pad, h-pad, w-pad*2, 2);
-
-    // height marks
-    ctx.fillStyle='#64748b';
-    ctx.font='11px monospace';
-    for(let i=0;i<=5;i++){
-      const yy = pad + (h-pad*2)*i/5;
-      ctx.fillText((h0*(i/5)).toFixed(0)+'m', 5, yy+4);
-      ctx.strokeStyle='rgba(56,189,248,.15)';
-      ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-pad,yy);ctx.stroke();
-    }
-
-    // trail
-    ctx.strokeStyle='rgba(56,189,248,.3)';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    state.trail.forEach((y,i)=>{
-      const yy = pad + y*scale;
-      if(i===0)ctx.moveTo(ballX,yy); else ctx.lineTo(ballX,yy);
-    });
-    ctx.stroke();
-
-    // ball
-    ctx.fillStyle='#38bdf8';
-    ctx.shadowColor='#38bdf8';
-    ctx.shadowBlur=20;
-    ctx.beginPath();
-    ctx.arc(ballX, ballY, 12, 0, Math.PI*2);
-    ctx.fill();
-    ctx.shadowBlur=0;
-
-    // velocity arrow
-    if(state.v>0){
-      ctx.strokeStyle='#f59e0b';
-      ctx.fillStyle='#f59e0b';
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.moveTo(ballX+20, ballY);
-      ctx.lineTo(ballX+20, ballY+Math.min(state.v*2,80));
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(ballX+20, ballY+Math.min(state.v*2,80));
-      ctx.lineTo(ballX+16, ballY+Math.min(state.v*2,80)-8);
-      ctx.lineTo(ballX+24, ballY+Math.min(state.v*2,80)-8);
-      ctx.fill();
-    }
-  }
-
-  return { update, draw, reset };
-})();
-
-// ========== 2. Projectile ==========
-const proj = (() => {
-  const {ctx,w,h} = getCtx('projCanvas');
-  let state = { running:false, t:0, x:0, y:0, trail:[], landed:false };
-  let angle = 45, v0 = 30, g = 9.8;
-
-  const readout = document.getElementById('projReadout');
-  const aSlider = document.getElementById('projAngle');
-  const vSlider = document.getElementById('projVel');
-  const aVal = document.getElementById('projAval');
-  const vVal = document.getElementById('projVval');
-
-  function calc(){
-    const rad = angle*Math.PI/180;
-    const R = v0*v0*Math.sin(2*rad)/g;
-    const H = v0*v0*Math.sin(rad)*Math.sin(rad)/(2*g);
-    const T = 2*v0*Math.sin(rad)/g;
-    readout.innerHTML = `المدى R: <strong>${R.toFixed(1)}</strong> m<br>أقصى ارتفاع H: <strong>${H.toFixed(1)}</strong> m<br>زمن الطيران T: <strong>${T.toFixed(2)}</strong> s`;
-  }
-
-  aSlider.oninput = () => { angle=+aSlider.value; aVal.textContent=angle+'°'; calc(); };
-  vSlider.oninput = () => { v0=+vSlider.value; vVal.textContent=v0+' m/s'; calc(); };
-
-  function launch(){
-    state = { running:true, t:0, x:0, y:0, trail:[], landed:false };
-  }
-  function reset(){
-    state = { running:false, t:0, x:0, y:0, trail:[], landed:false };
-    calc();
-  }
-
-  function update(dt){
-    if(!state.running || state.landed) return;
-    state.t += dt;
-    const rad = angle*Math.PI/180;
-    state.x = v0*Math.cos(rad)*state.t;
-    state.y = v0*Math.sin(rad)*state.t - 0.5*g*state.t*state.t;
-    if(state.y < 0){ state.y = 0; state.landed = true; state.running = false; }
-    state.trail.push({x:state.x, y:state.y});
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-    const pad = 40;
-    const groundY = h - pad;
-    const scaleX = (w - pad*2) / 200; // 200m max
-    const scaleY = (h - pad*2) / 60;  // 60m max
-
-    // ground
-    ctx.fillStyle='#1e293b';
-    ctx.fillRect(pad, groundY, w-pad*2, 2);
-
-    // launcher
-    ctx.fillStyle='#8b5cf6';
-    ctx.beginPath();
-    ctx.arc(pad, groundY, 8, 0, Math.PI*2);
-    ctx.fill();
-
-    // trail
-    ctx.strokeStyle='#38bdf8';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    state.trail.forEach((p,i)=>{
-      const px = pad + p.x*scaleX;
-      const py = groundY - p.y*scaleY;
-      if(i===0)ctx.moveTo(px,py); else ctx.lineTo(px,py);
-    });
-    ctx.stroke();
-
-    // ball
-    if(state.running || state.landed){
-      const px = pad + state.x*scaleX;
-      const py = groundY - state.y*scaleY;
-      ctx.fillStyle='#f59e0b';
-      ctx.shadowColor='#f59e0b';
-      ctx.shadowBlur=15;
-      ctx.beginPath();
-      ctx.arc(px,py,8,0,Math.PI*2);
-      ctx.fill();
-      ctx.shadowBlur=0;
-    }
-  }
-
-  return { update, draw, launch, reset };
-})();
-
-// ========== 3. Pendulum ==========
-const pend = (() => {
-  const {ctx,w,h} = getCtx('pendCanvas');
-  let state = { theta: 30*Math.PI/180, omega: 0 };
-  let L = 1.0, g = 9.8, theta0 = 30;
-
-  const readout = document.getElementById('pendReadout');
-  const LSlider = document.getElementById('pendLength');
-  const gSlider = document.getElementById('pendGravity');
-  const aSlider = document.getElementById('pendAngle');
-  const Lval = document.getElementById('pendLval');
-  const gVal = document.getElementById('pendGval');
-  const aVal = document.getElementById('pendAval');
-
-  LSlider.oninput = () => { L=+LSlider.value; Lval.textContent=L.toFixed(1)+' m'; reset(); };
-  gSlider.oninput = () => { g=+gSlider.value; gVal.textContent=g.toFixed(1)+' m/s²'; reset(); };
-  aSlider.oninput = () => { theta0=+aSlider.value; aVal.textContent=theta0+'°'; reset(); };
-
-  function reset(){
-    state = { theta: theta0*Math.PI/180, omega: 0 };
-  }
-
-  function update(dt){
-    // θ'' = -(g/L)sin(θ)
-    const alpha = -(g/L)*Math.sin(state.theta);
-    state.omega += alpha*dt;
-    state.theta += state.omega*dt;
-    const T = 2*Math.PI*Math.sqrt(L/g);
-    readout.innerHTML = `الزمن الدوري T: <strong>${T.toFixed(2)}</strong> s<br>الزاوية الحالية: <strong>${(state.theta*180/Math.PI).toFixed(1)}</strong>°<br>السرعة الزاوية ω: <strong>${state.omega.toFixed(2)}</strong> rad/s`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-    const pivotX = w/2;
-    const pivotY = 40;
-    const maxLen = Math.min(w,h) - 120;
-    const scale = maxLen / 2.5; // max L = 2.5
-    const len = L*scale;
-    const bobX = pivotX + len*Math.sin(state.theta);
-    const bobY = pivotY + len*Math.cos(state.theta);
-
-    // ceiling
-    ctx.fillStyle='#1e293b';
-    ctx.fillRect(pivotX-40, pivotY-8, 80, 6);
-
-    // string
-    ctx.strokeStyle='#94a3b8';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(pivotX,pivotY);
-    ctx.lineTo(bobX,bobY);
-    ctx.stroke();
-
-    // pivot
-    ctx.fillStyle='#38bdf8';
-    ctx.beginPath();
-    ctx.arc(pivotX,pivotY,6,0,Math.PI*2);
-    ctx.fill();
-
-    // bob
-    ctx.fillStyle='#f59e0b';
-    ctx.shadowColor='#f59e0b';
-    ctx.shadowBlur=20;
-    ctx.beginPath();
-    ctx.arc(bobX,bobY,18,0,Math.PI*2);
-    ctx.fill();
-    ctx.shadowBlur=0;
-
-    // angle arc
-    ctx.strokeStyle='rgba(56,189,248,.4)';
-    ctx.beginPath();
-    ctx.arc(pivotX,pivotY,50,Math.PI/2 - Math.PI/2, Math.PI/2 - Math.PI/2 + state.theta);
-    ctx.stroke();
-  }
-
-  return { update, draw, reset };
-})();
-
-// ========== 4. Spring ==========
-const spr = (() => {
-  const {ctx,w,h} = getCtx('springCanvas');
-  let state = { t: 0 };
-  let m = 0.5, k = 20, A = 0.8;
-
-  const readout = document.getElementById('sprReadout');
-  const mSlider = document.getElementById('sprMass');
-  const kSlider = document.getElementById('sprK');
-  const aSlider = document.getElementById('sprAmp');
-  const mVal = document.getElementById('sprMval');
-  const kVal = document.getElementById('sprKval');
-  const aVal = document.getElementById('sprAval');
-
-  mSlider.oninput = () => { m=+mSlider.value; mVal.textContent=m.toFixed(1)+' kg'; };
-  kSlider.oninput = () => { k=+kSlider.value; kVal.textContent=k+' N/m'; };
-  aSlider.oninput = () => { A=+aSlider.value; aVal.textContent=A.toFixed(1)+' m'; };
-
-  function reset(){ state.t = 0; }
-
-  function update(dt){
-    state.t += dt;
-    const omega = Math.sqrt(k/m);
-    const T = 2*Math.PI/omega;
-    const f = 1/T;
-    readout.innerHTML = `التردد الزاوي ω: <strong>${omega.toFixed(2)}</strong> rad/s<br>الزمن الدوري T: <strong>${T.toFixed(2)}</strong> s<br>التردد f: <strong>${f.toFixed(2)}</strong> Hz`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-    const omega = Math.sqrt(k/m);
-    const y = A*Math.cos(omega*state.t);
-    const scale = 100;
-    const anchorX = w/2;
-    const anchorY = 40;
-    const restLen = 120;
-    const bobY = anchorY + restLen + y*scale;
-
-    // ceiling
-    ctx.fillStyle='#1e293b';
-    ctx.fillRect(anchorX-50, anchorY-8, 100, 6);
-
-    // spring (zigzag)
-    ctx.strokeStyle='#38bdf8';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(anchorX, anchorY);
-    const segments = 12;
-    const springLen = bobY - anchorY - 20;
-    for(let i=1;i<=segments;i++){
-      const yy = anchorY + (springLen*i/segments);
-      const xx = anchorX + (i%2===0 ? -18 : 18);
-      ctx.lineTo(xx, yy);
-    }
-    ctx.lineTo(anchorX, bobY-20);
-    ctx.stroke();
-
-    // mass
-    ctx.fillStyle='#f59e0b';
-    ctx.shadowColor='#f59e0b';
-    ctx.shadowBlur=20;
-    ctx.fillRect(anchorX-30, bobY-20, 60, 40);
-    ctx.shadowBlur=0;
-
-    // label
-    ctx.fillStyle='#e2e8f0';
-    ctx.font='14px monospace';
-    ctx.textAlign='center';
-    ctx.fillText('m = '+m+' kg', anchorX, bobY+70);
-    ctx.textAlign='right';
-
-    // equilibrium line
-    ctx.strokeStyle='rgba(56,189,248,.3)';
-    ctx.setLineDash([5,5]);
-    ctx.beginPath();
-    ctx.moveTo(anchorX-80, anchorY+restLen);
-    ctx.lineTo(anchorX+80, anchorY+restLen);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-
-  return { update, draw, reset };
-})();
-
-// ========== 5. Ohm's Law ==========
-const ohm = (() => {
-  const {ctx,w,h} = getCtx('ohmsCanvas');
-  let V = 12, R = 6;
-  let phase = 0;
-
-  const readout = document.getElementById('ohmReadout');
-  const vSlider = document.getElementById('ohmVoltage');
-  const rSlider = document.getElementById('ohmResistance');
-  const vVal = document.getElementById('ohmVval');
-  const rVal = document.getElementById('ohmRval');
-
-  vSlider.oninput = () => { V=+vSlider.value; vVal.textContent=V.toFixed(1)+' V'; };
-  rSlider.oninput = () => { R=+rSlider.value; rVal.textContent=R+' Ω'; };
-
-  function update(dt){
-    phase += dt * (V/R) * 2;
-    const I = V/R;
-    const P = V*I;
-    readout.innerHTML = `التيار I = V/R: <strong>${I.toFixed(2)}</strong> A<br>القدرة P = V·I: <strong>${P.toFixed(1)}</strong> W<br>الطاقة/ث P: <strong>${P.toFixed(1)}</strong> J/s`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-
-    const cx=w/2, cy=h/2;
-    const bw = Math.min(400, w-100);
-    const bh = Math.min(250, h-100);
-    const left = cx-bw/2, top = cy-bh/2;
-    const right = cx+bw/2, bottom = cy+bh/2;
-
-    // wires
-    ctx.strokeStyle='#38bdf8';
-    ctx.lineWidth=3;
-    ctx.beginPath();
-    ctx.moveTo(left, top); ctx.lineTo(right, top); ctx.lineTo(right, bottom); ctx.lineTo(left, bottom); ctx.closePath();
-    ctx.stroke();
-
-    // battery (left side)
-    ctx.fillStyle='#f59e0b';
-    ctx.fillRect(left-15, cy-40, 30, 15);
-    ctx.fillRect(left-8, cy-25, 16, 8);
-    ctx.fillStyle='#e2e8f0';
-    ctx.font='12px monospace';
-    ctx.textAlign='center';
-    ctx.fillText('+', left, cy-50);
-    ctx.fillText('−', left, cy+50);
-    ctx.fillText(V+'V', left-45, cy+5);
-
-    // resistor (top)
-    const rx = cx-60, ry = top-15, rw=120, rh=30;
-    ctx.fillStyle='#1e293b';
-    ctx.strokeStyle='#a78bfa';
-    ctx.lineWidth=3;
-    ctx.fillRect(rx, ry, rw, rh);
-    ctx.strokeRect(rx, ry, rw, rh);
-    ctx.fillStyle='#a78bfa';
-    ctx.font='bold 14px monospace';
-    ctx.fillText(R+'Ω', cx, cy-rh/2);
-
-    // current animation (dots on wire)
-    const I = V/R;
-    const speed = Math.min(I*30, 100);
-    const perim = 2*(bw+bh);
-    const numDots = 12;
-    ctx.fillStyle='#22d3ee';
-    for(let i=0;i<numDots;i++){
-      let t = ((i/numDots) + (phase*speed/100)) % 1;
-      let dist = t*perim;
-      let px, py;
-      if(dist < bw){ px=left+dist; py=top; }
-      else if(dist < bw+bh){ px=right; py=top+(dist-bw); }
-      else if(dist < 2*bw+bh){ px=right-(dist-bw-bh); py=bottom; }
-      else { px=left; py=bottom-(dist-2*bw-bh); }
-      ctx.shadowColor='#22d3ee';
-      ctx.shadowBlur=10;
-      ctx.beginPath();
-      ctx.arc(px, py, 4, 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.shadowBlur=0;
-    ctx.textAlign='right';
-  }
-
-  return { update, draw };
-})();
-
-// ========== 6. Refraction ==========
-const refr = (() => {
-  const {ctx,w,h} = getCtx('refrCanvas');
-  let angle1 = 30, n1 = 1.00, n2 = 1.33;
-
-  const readout = document.getElementById('refrReadout');
-  const aSlider = document.getElementById('refrAngle');
-  const n1Slider = document.getElementById('refrN1');
-  const n2Slider = document.getElementById('refrN2');
-  const aVal = document.getElementById('refrAval');
-  const n1Val = document.getElementById('refrN1val');
-  const n2Val = document.getElementById('refrN2val');
-  const status = document.getElementById('refrStatus');
-
-  aSlider.oninput = () => { angle1=+aSlider.value; aVal.textContent=angle1+'°'; };
-  n1Slider.oninput = () => { n1=+n1Slider.value; n1Val.textContent=n1.toFixed(2); };
-  n2Slider.oninput = () => { n2=+n2Slider.value; n2Val.textContent=n2.toFixed(2); };
-
-  function update(){}
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    const cx = w/2;
-    const cy = h/2;
-
-    // media
-    const grad1 = ctx.createLinearGradient(0,0,0,cy);
-    grad1.addColorStop(0,'rgba(56,189,248,.08)');
-    grad1.addColorStop(1,'rgba(56,189,248,.15)');
-    ctx.fillStyle=grad1;
-    ctx.fillRect(0,0,w,cy);
-
-    const grad2 = ctx.createLinearGradient(0,cy,0,h);
-    grad2.addColorStop(0,'rgba(139,92,246,.15)');
-    grad2.addColorStop(1,'rgba(139,92,246,.08)');
-    ctx.fillStyle=grad2;
-    ctx.fillRect(0,cy,w,h-cy);
-
-    // interface
-    ctx.strokeStyle='#e2e8f0';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(0,cy);
-    ctx.lineTo(w,cy);
-    ctx.stroke();
-
-    // normal
-    ctx.setLineDash([5,5]);
-    ctx.strokeStyle='rgba(226,232,240,.5)';
-    ctx.beginPath();
-    ctx.moveTo(cx,0);
-    ctx.lineTo(cx,h);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // labels
-    ctx.fillStyle='#38bdf8';
-    ctx.font='13px monospace';
-    ctx.textAlign='right';
-    ctx.fillText('n₁ = '+n1.toFixed(2), w-20, 30);
-    ctx.fillStyle='#a78bfa';
-    ctx.fillText('n₂ = '+n2.toFixed(2), w-20, h-20);
-
-    // incident ray
-    const rad1 = angle1*Math.PI/180;
-    const len = Math.min(w,h)*0.7;
-    const ix = cx - Math.sin(rad1)*len;
-    const iy = cy - Math.cos(rad1)*len;
-
-    ctx.strokeStyle='#f59e0b';
-    ctx.lineWidth=3;
-    ctx.beginPath();
-    ctx.moveTo(ix,iy);
-    ctx.lineTo(cx,cy);
-    ctx.stroke();
-
-    // arrow head
-    ctx.fillStyle='#f59e0b';
-    ctx.beginPath();
-    ctx.arc(cx,cy,5,0,Math.PI*2);
-    ctx.fill();
-
-    // refracted ray
-    const sin2 = n1*Math.sin(rad1)/n2;
-    const critical = n1 > n2 ? Math.asin(n2/n1)*180/Math.PI : null;
-
-    if(sin2 <= 1){
-      const rad2 = Math.asin(sin2);
-      const rx = cx + Math.sin(rad2)*len;
-      const ry = cy + Math.cos(rad2)*len;
-      ctx.strokeStyle='#22d3ee';
-      ctx.beginPath();
-      ctx.moveTo(cx,cy);
-      ctx.lineTo(rx,ry);
-      ctx.stroke();
-
-      const t2 = rad2*180/Math.PI;
-      readout.innerHTML = `زاوية الانكسار θ₂: <strong>${t2.toFixed(1)}</strong>°<br>الزاوية الحرجة: <strong>${critical?critical.toFixed(1)+'°':'—'}</strong><br><span style="color:#22d3ee">انتقال طبيعي</span>`;
-    } else {
-      // total internal reflection
-      const rx = cx + Math.sin(rad1)*len;
-      const ry = cy - Math.cos(rad1)*len;
-      ctx.strokeStyle='#ef4444';
-      ctx.lineWidth=3;
-      ctx.beginPath();
-      ctx.moveTo(cx,cy);
-      ctx.lineTo(rx,ry);
-      ctx.stroke();
-      readout.innerHTML = `زاوية الانكسار θ₂: <strong>—</strong><br>الزاوية الحرجة: <strong>${critical.toFixed(1)}°</strong><br><span style="color:#ef4444">انعكاس كلي داخلي!</span>`;
-    }
-
-    // angle labels
-    ctx.fillStyle='#f59e0b';
-    ctx.font='12px monospace';
-    ctx.textAlign='left';
-    ctx.fillText('θ₁ = '+angle1+'°', 10, cy-10);
-  }
-
-  return { update, draw };
-})();
-
-// ========== 7. Lens ==========
-const lens = (() => {
-  const {ctx,w,h} = getCtx('lensCanvas');
-  let f = 50, dObj = 100, hObj = 30;
-
-  const readout = document.getElementById('lensReadout');
-  const fS = document.getElementById('lensF');
-  const dS = document.getElementById('lensD');
-  const hS = document.getElementById('lensH');
-  const fV = document.getElementById('lensFval');
-  const dV = document.getElementById('lensDval');
-  const hV = document.getElementById('lensHval');
-
-  fS.oninput = () => { f=+fS.value; fV.textContent=f+' cm'; };
-  dS.oninput = () => { dObj=+dS.value; dV.textContent=dObj+' cm'; };
-  hS.oninput = () => { hObj=+hS.value; hV.textContent=hObj+' cm'; };
-
-  function update(){}
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-    const cx = w/2;
-    const cy = h/2;
-    const scale = 0.8;
-
-    // optical axis
-    ctx.strokeStyle='rgba(226,232,240,.3)';
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.moveTo(0,cy);
-    ctx.lineTo(w,cy);
-    ctx.stroke();
-
-    // lens
-    ctx.strokeStyle='#38bdf8';
-    ctx.lineWidth=2;
-    ctx.fillStyle='rgba(56,189,248,.1)';
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, 15, 80, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
-
-    // focal points
-    const fx1 = cx - f*scale;
-    const fx2 = cx + f*scale;
-    ctx.fillStyle='#f59e0b';
-    [fx1,fx2].forEach(fx=>{
-      ctx.beginPath();
-      ctx.arc(fx, cy, 3, 0, Math.PI*2);
-      ctx.fill();
-    });
-    ctx.font='11px monospace';
-    ctx.textAlign='center';
-    ctx.fillStyle='#f59e0b';
-    ctx.fillText('F', fx1, cy+18);
-    ctx.fillText("F'", fx2, cy+18);
-
-    // object
-    const ox = cx - dObj*scale;
-    const oy = cy - hObj*scale;
-    ctx.strokeStyle='#22c55e';
-    ctx.fillStyle='#22c55e';
-    ctx.lineWidth=3;
-    ctx.beginPath();
-    ctx.moveTo(ox, cy);
-    ctx.lineTo(ox, oy);
-    ctx.stroke();
-    // arrowhead
-    ctx.beginPath();
-    ctx.moveTo(ox,oy);
-    ctx.lineTo(ox-6,oy+10);
-    ctx.lineTo(ox+6,oy+10);
-    ctx.fill();
-    ctx.fillStyle='#22c55e';
-    ctx.font='11px monospace';
-    ctx.fillText('Object', ox, cy+30);
-
-    // image calculation
-    const di = 1/(1/f - 1/dObj); // 1/di = 1/f - 1/do
-    const m = -di/dObj;
-    const hi = m*hObj;
-    const ix = cx + di*scale;
-    const iy = cy - hi*scale;
-
-    // draw image
-    if(Math.abs(di) < 1000){
-      ctx.strokeStyle='#a78bfa';
-      ctx.fillStyle='#a78bfa';
-      ctx.setLineDash([5,5]);
-      ctx.beginPath();
-      ctx.moveTo(ix, cy);
-      ctx.lineTo(ix, iy);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      ctx.moveTo(ix,iy);
-      ctx.lineTo(ix-6,iy + (hi>0?10:-10));
-      ctx.lineTo(ix+6,iy + (hi>0?10:-10));
-      ctx.fill();
-      ctx.fillStyle='#a78bfa';
-      ctx.fillText('Image', ix, cy+30);
-    }
-
-    // 3 principal rays
-    ctx.strokeStyle='rgba(245,158,11,.6)';
-    ctx.lineWidth=1.5;
-    // ray 1: parallel to axis, through F'
-    ctx.beginPath();
-    ctx.moveTo(ox, oy);
-    ctx.lineTo(cx, oy);
-    ctx.lineTo(ix, iy);
-    ctx.stroke();
-    // ray 2: through center
-    ctx.beginPath();
-    ctx.moveTo(ox, oy);
-    ctx.lineTo(ix, iy);
-    ctx.stroke();
-    // ray 3: through F then parallel
-    ctx.beginPath();
-    ctx.moveTo(ox, oy);
-    ctx.lineTo(cx, cy - (cy-oy)*(f/(dObj-f)));
-    ctx.lineTo(ix, iy);
-    ctx.stroke();
-
-    // readout
-    let type;
-    if(di > 0) type = Math.abs(m) > 1 ? 'حقيقية مكبرة' : 'حقيقية مصغرة';
-    else type = 'تقديرية مكبرة';
-    readout.innerHTML = `بُعد الصورة dᵢ: <strong>${di.toFixed(1)}</strong> cm<br>التكبير m: <strong>${m.toFixed(2)}</strong><br>نوع الصورة: <strong>${type}</strong>`;
-  }
-
-  return { update, draw };
-})();
-
-// ========== 8. Wave Interference ==========
-const waves = (() => {
-  const {ctx,w,h} = getCtx('waveCanvas');
-  let freq = 1.0, sep = 80, vel = 100;
-  let phase = 0;
-
-  const readout = document.getElementById('waveReadout');
-  const fS = document.getElementById('waveFreq');
-  const dS = document.getElementById('waveSep');
-  const vS = document.getElementById('waveVel');
-  const fV = document.getElementById('waveFval');
-  const dV = document.getElementById('waveDval');
-  const vV = document.getElementById('waveVval');
-
-  fS.oninput = () => { freq=+fS.value; fV.textContent=freq.toFixed(1)+' Hz'; };
-  dS.oninput = () => { sep=+dS.value; dV.textContent=sep+' px'; };
-  vS.oninput = () => { vel=+vS.value; vV.textContent=vel+' px/s'; };
-
-  function update(dt){
-    phase += dt*vel;
-    const lambda = vel/freq;
-    readout.innerHTML = `الطول الموجي λ = v/f: <strong>${lambda.toFixed(0)}</strong> px<br>عدد الخطوط العقدية: <strong>${Math.floor(2*sep/lambda)+1}</strong>`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-
-    const sx1 = w/2 - sep/2;
-    const sx2 = w/2 + sep/2;
-    const sy = h/2;
-    const lambda = vel/freq;
-
-    // draw as radial waves using circles
-    ctx.globalAlpha = 0.15;
-    for(let r = phase % lambda; r < Math.max(w,h); r += lambda){
-      // source 1
-      ctx.strokeStyle = Math.floor((r/lambda) % 2) === 0 ? '#38bdf8' : '#0ea5e9';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(sx1, sy, r, 0, Math.PI*2);
-      ctx.stroke();
-      // source 2
-      ctx.strokeStyle = Math.floor((r/lambda) % 2) === 0 ? '#a78bfa' : '#8b5cf6';
-      ctx.beginPath();
-      ctx.arc(sx2, sy, r, 0, Math.PI*2);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-
-    // sources
-    ctx.fillStyle='#38bdf8';
-    ctx.beginPath();
-    ctx.arc(sx1,sy,6,0,Math.PI*2);
-    ctx.fill();
-    ctx.fillStyle='#a78bfa';
-    ctx.beginPath();
-    ctx.arc(sx2,sy,6,0,Math.PI*2);
-    ctx.fill();
-
-    // nodal lines (where path diff = (n+0.5)λ)
-    const ratio = sep / lambda;
-    const nodes = Math.floor(ratio);
-    ctx.strokeStyle='rgba(239,68,68,.7)';
-    ctx.lineWidth=2;
-    ctx.setLineDash([3,3]);
-    for(let i=-nodes;i<=nodes;i++){
-      const n = i + 0.5;
-      const angle = Math.asin(n*lambda/sep);
-      // draw hyperbola arms
-      const L = Math.max(w,h)*1.5;
-      const dir = Math.sign(i) || 1;
-      const ax = Math.sin(angle)*L;
-      const ay = Math.cos(angle)*L;
-      ctx.beginPath();
-      ctx.moveTo(w/2, h/2);
-      ctx.lineTo(w/2 + ax, h/2 + ay);
-      ctx.moveTo(w/2, h/2);
-      ctx.lineTo(w/2 - ax, h/2 - ay);
-      ctx.stroke();
-    }
-    ctx.setLineDash([]);
-  }
-
-  return { update, draw };
-})();
-
-// ========== 9. Boyle's Law ==========
-const gas = (() => {
-  const {ctx,w,h} = getCtx('gasCanvas');
-  let V = 100, T = 300;
-  const particles = [];
-  for(let i=0;i<30;i++){
-    particles.push({
-      x: Math.random(),
-      y: Math.random(),
-      vx: (Math.random()-0.5)*0.6,
-      vy: (Math.random()-0.5)*0.6
-    });
-  }
-
-  const readout = document.getElementById('gasReadout');
-  const vS = document.getElementById('gasVol');
-  const tS = document.getElementById('gasTemp');
-  const vV = document.getElementById('gasVval');
-  const tV = document.getElementById('gasTval');
-
-  vS.oninput = () => { V=+vS.value; vV.textContent=V+'%'; };
-  tS.oninput = () => { T=+tS.value; tV.textContent=T+' K'; };
-
-  function update(dt){
-    const speed = Math.sqrt(T/300);
-    particles.forEach(p=>{
-      p.x += p.vx*dt*speed;
-      p.y += p.vy*dt*speed;
-      if(p.x<0){p.x=0;p.vx=-p.vx;}
-      if(p.x>1){p.x=1;p.vx=-p.vx;}
-      if(p.y<0){p.y=0;p.vy=-p.vy;}
-      if(p.y>1){p.y=1;p.vy=-p.vy;}
-    });
-    const P = (100/V) * (T/300);
-    readout.innerHTML = `الضغط P: <strong>${P.toFixed(2)}</strong> atm<br>P·V: <strong>${(P*V/100).toFixed(2)}</strong><br>عدد الجزيئات: <strong>ثابت</strong>`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-
-    const cylW = 200;
-    const cylH = 300;
-    const cx = w/2;
-    const cy = h/2;
-    const x = cx - cylW/2;
-    const top = cy - cylH/2;
-    const bottom = cy + cylH/2;
-
-    // gas region
-    const gasTop = top + (100-V)/100*cylH;
-    const grad = ctx.createLinearGradient(0,gasTop,0,bottom);
-    grad.addColorStop(0,'rgba(56,189,248,.05)');
-    grad.addColorStop(1,'rgba(56,189,248,.25)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(x, gasTop, cylW, cylH - (gasTop-top));
-
-    // particles
-    ctx.fillStyle='#22d3ee';
-    particles.forEach(p=>{
-      const px = x + p.x*cylW;
-      const py = gasTop + p.y*(bottom-gasTop);
-      ctx.beginPath();
-      ctx.arc(px, py, 3, 0, Math.PI*2);
-      ctx.fill();
-    });
-
-    // piston
-    ctx.fillStyle='#475569';
-    ctx.fillRect(x-10, gasTop-15, cylW+20, 15);
-    ctx.fillStyle='#64748b';
-    ctx.fillRect(cx-15, top-40, 30, 25);
-    ctx.strokeStyle='#94a3b8';
-    ctx.lineWidth=2;
-    ctx.strokeRect(x, top, cylW, cylH);
-
-    // volume label
-    ctx.fillStyle='#38bdf8';
-    ctx.font='bold 14px monospace';
-    ctx.textAlign='center';
-    ctx.fillText('V = '+V+'%', cx, bottom+25);
-    ctx.fillStyle='#a78bfa';
-    ctx.fillText('P = '+(100/V).toFixed(2)+' atm', cx, top-55);
-    ctx.textAlign='right';
-  }
-
-  return { update, draw };
-})();
-
-// ========== 10. Newton's 2nd Law ==========
-const nwt = (() => {
-  const {ctx,w,h} = getCtx('newtonCanvas');
-  let state = { x: 0, v: 0, t: 0 };
-  let F = 20, m = 2, mu = 0.1;
-  const g = 9.8;
-
-  const readout = document.getElementById('nwtReadout');
-  const fS = document.getElementById('nwtForce');
-  const mS = document.getElementById('nwtMass');
-  const uS = document.getElementById('nwtMu');
-  const fV = document.getElementById('nwtFval');
-  const mV = document.getElementById('nwtMval');
-  const uV = document.getElementById('nwtMuval');
-
-  fS.oninput = () => { F=+fS.value; fV.textContent=F+' N'; };
-  mS.oninput = () => { m=+mS.value; mV.textContent=m.toFixed(1)+' kg'; };
-  uS.oninput = () => { mu=+uS.value; uV.textContent=mu.toFixed(2); };
-
-  function reset(){ state = { x:0, v:0, t:0 }; }
-
-  function update(dt){
-    state.t += dt;
-    const friction = mu*m*g;
-    let net = F - friction;
-    if(state.v === 0 && net <= 0) net = 0;
-    const a = net/m;
-    state.v += a*dt;
-    if(state.v < 0){ state.v = 0; }
-    state.x += state.v*dt;
-    if(state.x > 10){ state.x = 10; state.v = 0; }
-    readout.innerHTML = `التسارع a: <strong>${a.toFixed(2)}</strong> m/s²<br>السرعة v: <strong>${state.v.toFixed(2)}</strong> m/s<br>المسافة: <strong>${state.x.toFixed(2)}</strong> m`;
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    drawGrid(ctx,w,h);
-    const pad = 40;
-    const groundY = h - pad;
-    const scale = (w - pad*2) / 10;
-
-    // ground
-    ctx.fillStyle='#1e293b';
-    ctx.fillRect(0, groundY, w, 5);
-
-    // block
-    const bx = pad + state.x*scale;
-    const bw = 60;
-    const bh = 60;
-    ctx.fillStyle='#38bdf8';
-    ctx.shadowColor='#38bdf8';
-    ctx.shadowBlur=15;
-    ctx.fillRect(bx, groundY-bh, bw, bh);
-    ctx.shadowBlur=0;
-
-    // mass label
-    ctx.fillStyle='#0a0e1a';
-    ctx.font='bold 14px monospace';
-    ctx.textAlign='center';
-    ctx.fillText(m+'kg', bx+bw/2, groundY-bh/2+5);
-
-    // force arrow
-    if(F > 0){
-      ctx.strokeStyle='#ef4444';
-      ctx.fillStyle='#ef4444';
-      ctx.lineWidth=3;
-      const fx = bx+bw+20;
-      const fy = groundY-bh/2;
-      ctx.beginPath();
-      ctx.moveTo(fx, fy);
-      ctx.lineTo(fx+60, fy);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(fx+60, fy);
-      ctx.lineTo(fx+50, fy-8);
-      ctx.lineTo(fx+50, fy+8);
-      ctx.fill();
-      ctx.font='12px monospace';
-      ctx.fillText('F='+F+'N', fx+30, fy-15);
-    }
-
-    // velocity arrow
-    if(state.v > 0){
-      ctx.strokeStyle='#22c55e';
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.moveTo(bx, groundY-bh-20);
-      ctx.lineTo(bx+Math.min(state.v*10,80), groundY-bh-20);
-      ctx.stroke();
-    }
-
-    ctx.textAlign='right';
-  }
-
-  return { update, draw, reset };
-})();
-
-// ========== Tab switching ==========
-const expMap = {
-  freefall: ff,
-  projectile: proj,
-  pendulum: pend,
-  spring: spr,
-  ohms: ohm,
-  refraction: refr,
-  lens: lens,
-  waves: waves,
-  gas: gas,
-  newton: nwt
-};
-
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    const id = tab.dataset.tab;
-    document.getElementById(id).classList.add('active');
-    activeExp = expMap[id];
-    // re-init canvas on switch (in case of resize)
-    setTimeout(()=>{
-      // trigger redraw
-      if(activeExp && activeExp.draw) activeExp.draw();
-    }, 50);
-  };
-});
-
-// ========== Init ==========
-window.addEventListener('load', () => {
-  activeExp = ff;
-  // init all readouts
-  proj.reset();
-  pend.reset();
-  spr.reset();
-});
-
-// re-init canvas on resize
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    // simple redraw — canvases will reinit on next tab switch
-    if(activeExp && activeExp.draw) activeExp.draw();
-  }, 300);
-});
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d');
+let W=300,H=380,cur=null,idx=0,P={},S={},Z={},drag=0,paused=false,last=0,lo=0;
+const E=[],K={},D=Math.PI/180,clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const num=(v,d=2)=>{if(typeof v!=='number'||isNaN(v))return'—';if(!isFinite(v))return'∞';const a=Math.abs(v);return(a!==0&&(a<0.01||a>=1e6))?v.toExponential(2):(+v.toFixed(d)).toString()};
+const q=(id,l,a,b,st,v,u,r)=>[id,l,a,b,st,v,u||'',r?1:0];
+const s=(id,l,a,b,v,u,st)=>[id,l,a,b,st||((b-a)>=20?1:(b-a)>=2?.1:.01),v,u||'',0];
+
+/* ===== أدوات الرسم ===== */
+function fit(){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;W=Math.max(r.width,200);H=Math.max(r.height,200);cv.width=Math.round(W*d);cv.height=Math.round(H*d);ctx.setTransform(d,0,0,d,0,0);ctx.direction='ltr'}
+function ln(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([])}
+function dot(x,y,r,c,g){ctx.fillStyle=c;if(g){ctx.shadowColor=c;ctx.shadowBlur=g}ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.shadowBlur=0}
+function tx(t,x,y,c,a,sz){ctx.fillStyle=c||'#94a3b8';ctx.font=(sz||12)+'px Cairo,monospace';ctx.textAlign=a||'center';ctx.fillText(t,x,y)}
+function arr(x1,y1,x2,y2,c,w,hd){hd=hd||9;ln(x1,y1,x2,y2,c,w||2);const a=Math.atan2(y2-y1,x2-x1);ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-hd*Math.cos(a-.4),y2-hd*Math.sin(a-.4));ctx.lineTo(x2-hd*Math.cos(a+.4),y2-hd*Math.sin(a+.4));ctx.fill()}
+function grid(){ctx.strokeStyle='rgba(56,189,248,.06)';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x+=40){ctx.moveTo(x,0);ctx.lineTo(x,H)}for(let y=0;y<H;y+=40){ctx.moveTo(0,y);ctx.lineTo(W,y)}ctx.stroke()}
+function setP(id,v){const d=cur.all.find(z=>z[0]===id);if(!d)return;v=clamp(v,d[2],d[3]);v=+(Math.round(v/d[4])*d[4]).toFixed(4);P[id]=v;const e=$('s_'+id);if(e){e.value=v;$('v_'+id).textContent=num(v)+' '+d[6]}}
+
+/* ===== 1. السقوط الحر ===== */
+K.fall={eq:'h = ½gt²  ،  v = gt',hint:'اسحب الكرة لأعلى أو لأسفل لتغيير الارتفاع',
+par:[q('g','عجلة الجاذبية g',1,25,.1,9.8,'m/s²',1),q('h','الارتفاع h',10,200,5,100,'m',1),q('m','الكتلة m',.1,10,.1,1,'kg'),q('c','مقاومة الهواء',0,.5,.01,0,'',1)],
+init(){S.y=0;S.v=0;S.t=0;S.d=0;S.w=0},
+step(dt){if(drag)return;if(S.d){S.w+=dt;if(S.w>3)K.fall.init();return}S.t+=dt;const n=6,h=dt/n;for(let i=0;i<n;i++){S.v+=(P.g-P.c*S.v*Math.abs(S.v)/P.m)*h;S.y+=S.v*h}if(S.y>=P.h){S.y=P.h;S.d=1}},
+draw(){grid();const g0=H-35,sc=(H-70)/200,x=W/2;ln(30,g0,W-30,g0,'#475569',3);
+for(let h=0;h<=200;h+=20){const y=g0-h*sc;ln(30,y,h%100?38:46,y,'#475569',1);if(h%50===0)tx(h+'m',50,y+4,'#64748b','left',11)}
+const top=g0-P.h*sc,by=top+S.y*sc;ln(x,top,x,by,'rgba(56,189,248,.35)',2,[4,4]);dot(x,by,13,'#38bdf8',18);
+if(S.v>1)arr(x+26,by,x+26,by+clamp(S.v*2,6,90),'#f59e0b');
+tx(Z.pl||'الأرض',W-14,24,'#a78bfa','right',14);tx('g = '+num(P.g)+' m/s²',W-14,44,'#64748b','right',12)},
+down(x,y){const g0=H-35,sc=(H-70)/200,by=g0-P.h*sc+S.y*sc;if(Math.hypot(x-W/2,y-by)<32){drag=1;return 1}},
+move(x,y){setP('h',(H-35-y)/((H-70)/200));S.y=0;S.v=0;S.t=0;S.d=0},
+up(){K.fall.init()},
+out(){return[['الزمن t',S.t,'s'],['السرعة v',S.v,'m/s'],['الارتفاع المتبقي',P.h-S.y,'m'],['زمن السقوط (بدون هواء)',Math.sqrt(2*P.h/P.g),'s']]}};
+
+/* ===== 2. المقذوفات ===== */
+const pg=()=>{const vx=P.v*Math.cos(P.a*D),vy=P.v*Math.sin(P.a*D),tf=(vy+Math.sqrt(vy*vy+2*P.g*P.h0))/P.g;return{vx,vy,tf,R:vx*tf,Hm:P.h0+vy*vy/(2*P.g)}};
+const pv=()=>{const g=pg(),xm=Math.max(g.R,10)*1.1,ym=Math.max(g.Hm,5)*1.25;return{g,sc:Math.min((W-70)/xm,(H-70)/ym),ox:40,oy:H-35}};
+K.proj={eq:'R = v²sin2θ / g  ،  H = v²sin²θ / 2g',hint:'اسحب رأس السهم البرتقالي لتغيير الزاوية والسرعة',
+par:[q('v','السرعة الابتدائية v₀',5,80,1,30,'m/s',1),q('a','زاوية الإطلاق θ',0,85,1,45,'°',1),q('g','الجاذبية g',1,25,.1,9.8,'m/s²',1),q('h0','ارتفاع الإطلاق',0,50,1,0,'m',1)],
+init(){S.t=0;S.d=0;S.w=0},
+step(dt){if(drag)return;const g=pg();if(!S.d){S.t+=dt;if(S.t>=g.tf){S.t=g.tf;S.d=1}}else{S.w+=dt;if(S.w>2.5)K.proj.init()}},
+draw(){grid();const{g,sc,ox,oy}=pv(),ly=oy-P.h0*sc;ln(20,oy,W-10,oy,'#475569',3);
+if(P.h0>0){ctx.fillStyle='#1e293b';ctx.fillRect(ox-30,ly,30,oy-ly)}
+ctx.strokeStyle='rgba(56,189,248,.3)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);ctx.beginPath();
+for(let i=0;i<=60;i++){const t=g.tf*i/60,px=ox+g.vx*t*sc,py=oy-(P.h0+g.vy*t-.5*P.g*t*t)*sc;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.stroke();ctx.setLineDash([]);
+ctx.strokeStyle='#38bdf8';ctx.lineWidth=2.5;ctx.beginPath();
+for(let i=0;i<=40;i++){const t=S.t*i/40,px=ox+g.vx*t*sc,py=oy-(P.h0+g.vy*t-.5*P.g*t*t)*sc;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.stroke();
+const tipx=ox+Math.cos(P.a*D)*P.v*2.5,tipy=ly-Math.sin(P.a*D)*P.v*2.5;arr(ox,ly,tipx,tipy,'#f59e0b',3);dot(tipx,tipy,7,'#f59e0b');dot(ox,ly,6,'#8b5cf6');
+dot(ox+g.vx*S.t*sc,oy-(P.h0+g.vy*S.t-.5*P.g*S.t*S.t)*sc,8,'#f59e0b',15);
+tx('R = '+num(g.R)+' m',clamp(ox+g.R*sc,40,W-40),oy+22,'#a78bfa','center',12)},
+down(x,y){const{sc,ox,oy}=pv(),ly=oy-P.h0*sc,a=ox+Math.cos(P.a*D)*P.v*2.5,b=ly-Math.sin(P.a*D)*P.v*2.5;if(Math.hypot(x-a,y-b)<32){drag=1;return 1}},
+move(x,y){const{sc,ox,oy}=pv(),dx=x-ox,dy=oy-P.h0*sc-y;setP('a',Math.atan2(dy,dx)/D);setP('v',Math.hypot(dx,dy)/2.5);S.t=0;S.d=0},
+up(){K.proj.init()},
+out(){const g=pg();return[['المدى R',g.R,'m'],['أقصى ارتفاع',g.Hm,'m'],['زمن الطيران',g.tf,'s'],['المركبة الأفقية vₓ',g.vx,'m/s']]}};
+
+/* ===== 3. البندول ===== */
+const pb=()=>{const L=P.L/3*(H-100),px=W/2,py=36;return{px,py,L,bx:px+L*Math.sin(S.th),by:py+L*Math.cos(S.th)}};
+K.pend={eq:'T = 2π√(L/g)',hint:'اسحب الكرة إلى أي زاوية ثم أفلتها',
+par:[q('L','طول الخيط L',.3,3,.1,1,'m',1),q('g','الجاذبية g',1,25,.1,9.8,'m/s²',1),q('th','زاوية البداية θ₀',5,170,1,40,'°',1),q('b','الاحتكاك',0,1,.01,0,'')],
+init(){S.th=P.th*D;S.w=0},
+step(dt){if(drag)return;const n=8,h=dt/n;for(let i=0;i<n;i++){S.w+=(-(P.g/P.L)*Math.sin(S.th)-P.b*S.w)*h;S.th+=S.w*h}},
+draw(){grid();const b=pb();ctx.fillStyle='#1e293b';ctx.fillRect(b.px-45,b.py-9,90,7);ln(b.px,b.py,b.px,b.py+b.L,'rgba(148,163,184,.3)',1,[4,4]);
+ln(b.px,b.py,b.bx,b.by,'#94a3b8',2);dot(b.px,b.py,5,'#38bdf8');dot(b.bx,b.by,16,'#f59e0b',20);
+ctx.strokeStyle='rgba(56,189,248,.5)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(b.px,b.py,40,Math.PI/2,Math.PI/2-S.th,S.th>0);ctx.stroke();
+tx(num(S.th/D,1)+'°',b.px+(S.th>0?-48:48),b.py+54,'#38bdf8','center',12)},
+down(x,y){const b=pb();if(Math.hypot(x-b.bx,y-b.by)<34){drag=1;return 1}},
+move(x,y){const b=pb();S.th=clamp(Math.atan2(x-b.px,y-b.py),-170*D,170*D);S.w=0;setP('th',Math.abs(S.th)/D)},
+out(){const T=2*Math.PI*Math.sqrt(P.L/P.g),a=P.th*D;return[['T (زوايا صغيرة)',T,'s'],['T (للزاوية المحددة)',T*(1+a*a/16+11*a**4/3072),'s'],['الزاوية الحالية',S.th/D,'°'],['السرعة الزاوية',S.w,'rad/s'],['السرعة الخطية',Math.abs(S.w)*P.L,'m/s']]}};
+
+/* ===== 4. النابض ===== */
+K.spr={eq:'T = 2π√(m/k)  ،  F = −kx',hint:'اسحب الكتلة لأعلى أو لأسفل ثم أفلتها',
+par:[q('m','الكتلة m',.1,5,.1,1,'kg'),q('k','ثابت النابض k',2,100,1,20,'N/m'),q('b','التخميد b',0,3,.01,0,'kg/s')],
+init(){S.y=Z.y0||.8;S.v=0},
+step(dt){if(drag)return;const n=8,h=dt/n;for(let i=0;i<n;i++){S.v+=(-P.k*S.y-P.b*S.v)/P.m*h;S.y+=S.v*h}},
+draw(){grid();const x=W/2,by=200+S.y*100;ln(x-50,30,x+50,30,'#475569',5);ln(x-75,200,x+75,200,'rgba(56,189,248,.4)',1,[5,5]);tx('الاتزان',x+80,204,'#64748b','left',11);
+ctx.strokeStyle='#38bdf8';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x,30);const n=14,y1=by-22;for(let i=1;i<=n;i++)ctx.lineTo(x+(i%2?16:-16),30+(y1-30)*(i-.5)/n);ctx.lineTo(x,y1);ctx.stroke();
+ctx.fillStyle='#f59e0b';ctx.shadowColor='#f59e0b';ctx.shadowBlur=18;ctx.fillRect(x-30,by-22,60,44);ctx.shadowBlur=0;tx(num(P.m,1)+' kg',x,by+5,'#0a0e1a','center',13)},
+down(x,y){if(Math.abs(x-W/2)<52&&Math.abs(y-(200+S.y*100))<36){drag=1;return 1}},
+move(x,y){S.y=clamp((y-200)/100,-1.2,1.2);S.v=0},
+out(){const w=Math.sqrt(P.k/P.m),A=Math.hypot(S.y,S.v/w);return[['ω',w,'rad/s'],['T',2*Math.PI/w,'s'],['f',w/(2*Math.PI),'Hz'],['الإزاحة y',S.y,'m'],['السعة الحالية',A,'m'],['الطاقة الكلية',.5*P.k*A*A,'J']]}};
+
+/* ===== 5. الدوائر الكهربائية ===== */
+const oc=()=>{const m=Z.mode|0,V=P.V,R1=P.R1,R2=P.R2;let Rt,I,I1,I2=0;if(m===0){Rt=R1;I1=I=V/R1}else if(m===1){Rt=R1+R2;I1=I=V/Rt}else{Rt=R1*R2/(R1+R2);I1=V/R1;I2=V/R2;I=I1+I2}return{m,Rt,I,I1,I2}};
+const og=()=>{const L=W*.14,R=W*.86,T=H*.24,B=H*.76;return{L,R,T,B,M:(L+R)/2,cy:(T+B)/2}};
+const orp=()=>{const g=og(),m=Z.mode|0;return m===0?[['R1',g.M,g.T,0]]:m===1?[['R1',g.M,g.T,0],['R2',g.M,g.B,0]]:[['R1',g.R,g.cy,1],['R2',g.M,g.cy,1]]};
+function dots(pts,ph,c){let tot=0;const sg=[];for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);sg.push(l);tot+=l}
+for(let i=0;i<14;i++){let d=((i/14+ph)%1)*tot,j=0;while(j<sg.length-1&&d>sg[j]){d-=sg[j];j++}const f=sg[j]?d/sg[j]:0,a=pts[j],b=pts[j+1];dot(a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,4,c,8)}}
+K.ohm={eq:'V = IR',hint:'اسحب البطارية أو المقاومة لأعلى/أسفل لتغيير قيمتها',
+par:[q('V','الجهد V',1,24,.5,12,'V'),q('R1','المقاومة R₁',1,100,1,10,'Ω'),q('R2','المقاومة R₂',1,100,1,20,'Ω')],
+init(){S.p1=0;S.p2=0},
+step(dt){const c=oc();S.p1+=dt*clamp(c.I1*.05,.04,1.2);S.p2+=dt*clamp(c.I2*.05,0,1.2)},
+draw(){grid();const{L,R,T,B,M,cy}=og(),c=oc();ln(L,T,R,T,'#38bdf8',3);ln(R,T,R,B,'#38bdf8',3);ln(R,B,L,B,'#38bdf8',3);ln(L,B,L,T,'#38bdf8',3);if(c.m===2)ln(M,T,M,B,'#38bdf8',3);
+ctx.fillStyle='#0f172a';ctx.fillRect(L-24,cy-14,48,28);ln(L-18,cy-6,L+18,cy-6,'#f59e0b',4);ln(L-9,cy+6,L+9,cy+6,'#f59e0b',4);tx('+',L+28,cy-2,'#f59e0b','center',14);tx(num(P.V)+' V',L,cy+36,'#f59e0b','center',13);
+orp().forEach(r=>{const v=r[3],w=v?24:64,h=v?64:24;ctx.fillStyle='#0f172a';ctx.fillRect(r[1]-w/2,r[2]-h/2,w,h);ctx.strokeStyle='#a78bfa';ctx.lineWidth=3;ctx.strokeRect(r[1]-w/2,r[2]-h/2,w,h);
+if(v)tx(num(P[r[0]])+'Ω',r[1]+16,r[2]+4,'#a78bfa','left',12);else tx(num(P[r[0]])+'Ω',r[1],r[2]+4,'#a78bfa','center',12)});
+dots([[L,T],[R,T],[R,B],[L,B],[L,T]],S.p1,'#22d3ee');if(c.m===2)dots([[L,T],[M,T],[M,B],[L,B],[L,T]],S.p2,'#facc15');
+tx('I = '+num(c.I)+' A',W/2,H-10,'#22d3ee','center',14)},
+down(x,y){const g=og();if(Math.abs(x-g.L)<38&&Math.abs(y-g.cy)<42){drag='V';return 1}for(const r of orp()){if(Math.abs(x-r[1])<(r[3]?24:42)&&Math.abs(y-r[2])<(r[3]?42:24)){drag=r[0];return 1}}},
+move(x,y){const f=clamp((H-30-y)/(H-60),0,1);if(drag==='V')setP('V',1+f*23);else setP(drag,1+f*99)},
+out(){const c=oc(),V=P.V;if(c.m===0)return[['التيار I = V/R',c.I,'A'],['القدرة P = VI',V*c.I,'W'],['الطاقة في دقيقة',V*c.I*60/1000,'kJ']];
+if(c.m===1)return[['المقاومة الكلية',c.Rt,'Ω'],['التيار I',c.I,'A'],['الجهد على R₁',c.I*P.R1,'V'],['الجهد على R₂',c.I*P.R2,'V'],['القدرة الكلية',V*c.I,'W']];
+return[['المقاومة المكافئة',c.Rt,'Ω'],['التيار في R₁',c.I1,'A'],['التيار في R₂',c.I2,'A'],['التيار الكلي',c.I,'A'],['القدرة الكلية',V*c.I,'W']]}};
+
+/* ===== 6. انكسار الضوء ===== */
+K.ray={eq:'n₁ sinθ₁ = n₂ sinθ₂',hint:'اسحب بداية الشعاع البرتقالي لتغيير زاوية السقوط',
+par:[q('n1','معامل انكسار الوسط 1 (n₁)',1,2.5,.01,1,''),q('n2','معامل انكسار الوسط 2 (n₂)',1,2.5,.01,1.5,''),q('a','زاوية السقوط θ₁',0,89,1,35,'°')],
+draw(){const cx=W/2,cy=H/2,L=Math.min(W,H)*.42,a=P.a*D;
+ctx.fillStyle='rgba(56,189,248,'+(.04+(P.n1-1)*.12)+')';ctx.fillRect(0,0,W,cy);ctx.fillStyle='rgba(139,92,246,'+(.04+(P.n2-1)*.12)+')';ctx.fillRect(0,cy,W,H-cy);
+ln(0,cy,W,cy,'#e2e8f0',2);ln(cx,0,cx,H,'rgba(226,232,240,.4)',1,[5,5]);
+tx((Z.m1||'الوسط 1')+'  n₁ = '+num(P.n1),W-12,24,'#38bdf8','right',13);tx((Z.m2||'الوسط 2')+'  n₂ = '+num(P.n2),W-12,H-14,'#a78bfa','right',13);
+const sx=cx-Math.sin(a)*L,sy=cy-Math.cos(a)*L;ln(sx,sy,cx,cy,'#f59e0b',3);dot(sx,sy,8,'#f59e0b',10);
+const s2=P.n1*Math.sin(a)/P.n2;
+if(s2<=1){const r=Math.asin(s2);ln(cx,cy,cx+Math.sin(r)*L,cy+Math.cos(r)*L,'#22d3ee',3);ln(cx,cy,cx+Math.sin(a)*L,cy-Math.cos(a)*L,'rgba(245,158,11,.3)',2)}
+else ln(cx,cy,cx+Math.sin(a)*L,cy-Math.cos(a)*L,'#ef4444',3);
+tx('θ₁ = '+P.a+'°',12,cy-10,'#f59e0b','left',12);if(s2<=1)tx('θ₂ = '+num(Math.asin(s2)/D,1)+'°',12,cy+22,'#22d3ee','left',12)},
+down(x,y){const cx=W/2,cy=H/2,L=Math.min(W,H)*.42,a=P.a*D;if(Math.hypot(x-(cx-Math.sin(a)*L),y-(cy-Math.cos(a)*L))<34){drag=1;return 1}},
+move(x,y){setP('a',Math.atan2(W/2-x,H/2-y)/D)},
+out(){const s2=P.n1*Math.sin(P.a*D)/P.n2,tir=s2>1;return[['θ₂ (الانكسار)',tir?'—':Math.asin(s2)/D,'°'],['الزاوية الحرجة',P.n1>P.n2?Math.asin(P.n2/P.n1)/D:'—','°'],['زاوية بروستر',Math.atan(P.n2/P.n1)/D,'°'],['سرعة الضوء في الوسط 2',3/P.n2,'×10⁸ m/s'],['الحالة',tir?'انعكاس كلي داخلي':'انكسار']]}};
+
+/* ===== 7. العدسات والمرايا ===== */
+const lg=()=>{const sg=Z.sg||1,F=P.f*sg,fw=Z.m?-1:1,inf=Math.abs(P.d-F)<.5,di=inf?Infinity:F*P.d/(P.d-F),m=inf?0:-di/P.d;return{sg,F,fw,cx:W/2,cy:H/2,sc:(W/2-24)/220,inf,di,m,hi:m*P.h}};
+K.lens={eq:'1/f = 1/dₒ + 1/dᵢ  ،  m = −dᵢ/dₒ',hint:'اسحب رأس السهم الأخضر (الجسم) لتحريكه',
+par:[q('f','البعد البؤري f',20,100,5,50,'cm'),q('d','بُعد الجسم dₒ',10,200,5,100,'cm'),q('h','ارتفاع الجسم hₒ',10,80,5,40,'cm')],
+draw(){grid();const g=lg(),{cx,cy,sc,fw,F}=g;ln(0,cy,W,cy,'rgba(226,232,240,.3)',1);
+if(Z.m){ln(cx,cy-90,cx,cy+90,'#38bdf8',4);for(let y=-88;y<=88;y+=11)ln(cx,cy+y,cx+8,cy+y+8,'#64748b',1)}
+else{ln(cx,cy-90,cx,cy+90,'#38bdf8',2);const k=g.sg>0?1:-1;ctx.fillStyle='#38bdf8';[-1,1].forEach(e=>{const y0=cy+e*90,y1=cy+e*(90-12*k);ctx.beginPath();ctx.moveTo(cx,y0);ctx.lineTo(cx-7,y1);ctx.lineTo(cx+7,y1);ctx.fill()})}
+const fx=Z.m?[cx+fw*F*sc]:[cx+F*sc,cx-F*sc];fx.forEach(x=>{dot(x,cy,4,'#f59e0b');tx('F',x,cy+18,'#f59e0b','center',11)});if(Z.m)tx('C',cx+fw*2*F*sc,cy+18,'#64748b','center',11);
+const ox=cx-P.d*sc,oy=cy-P.h*sc;arr(ox,cy,ox,oy,'#22c55e',3);dot(ox,oy,6,'#22c55e');tx('الجسم',ox,cy+30,'#22c55e','center',11);
+if(g.inf){tx('الأشعة متوازية — الصورة في اللانهاية',W/2,24,'#ef4444','center',13);ln(ox,oy,cx,oy,'#f59e0b',1.5);ln(cx,oy,W,oy,'#f59e0b',1.5);return}
+const ix=cx+fw*g.di*sc,iy=cy-g.hi*sc,real=g.di>0;
+const ray=(hx,hy,c)=>{ln(ox,oy,hx,hy,c,1.5);if(real)ln(hx,hy,ix,iy,c,1.5);else{const dx=hx-ix,dy=hy-iy,l=Math.hypot(dx,dy)||1;ln(hx,hy,hx+dx/l*600,hy+dy/l*600,c,1.5);ln(hx,hy,ix,iy,c,1,[4,4])}};
+ray(cx,oy,'rgba(245,158,11,.85)');ray(cx,cy,'rgba(34,211,238,.85)');
+if(real)arr(ix,cy,ix,iy,'#a78bfa',3);else{ctx.globalAlpha=.7;arr(ix,cy,ix,iy,'#a78bfa',3);ctx.globalAlpha=1}tx('الصورة',ix,cy+(g.hi>0?-8:30)+(g.hi>0?0:0),'#a78bfa','center',11)},
+down(x,y){const g=lg();if(Math.hypot(x-(g.cx-P.d*g.sc),y-(g.cy-P.h*g.sc))<34){drag=1;return 1}},
+move(x,y){const g=lg();setP('d',(g.cx-x)/g.sc);setP('h',(g.cy-y)/g.sc)},
+out(){const g=lg();if(g.inf)return[['الصورة','في اللانهاية (لا تتكون)']];return[['بُعد الصورة dᵢ',g.di,'cm'],['التكبير m',g.m],['ارتفاع الصورة',g.hi,'cm'],['الصورة',(g.di>0?'حقيقية':'تقديرية')+' · '+(g.m<0?'مقلوبة':'معتدلة')+' · '+(Math.abs(g.m)>1.001?'مكبرة':Math.abs(g.m)<.999?'مصغرة':'بنفس الحجم')],['القدرة',100/g.F,'D']]}};
+
+/* ===== 8. تداخل الأمواج ===== */
+K.wave={eq:'λ = v/f  ،  Δ = nλ (بنّاء)  ،  Δ = (n+½)λ (هدّام)',hint:'اسحب المصادر (النقاط البرتقالية) لتغيير نمط التداخل',
+par:[q('f','التردد f',.3,3,.1,1,'Hz'),q('v','سرعة الموجة v',40,200,5,100,'px/s'),q('n','عدد المصادر',1,3,1,2,'',1)],
+init(){const cx=W/2,cy=H/2,d=(Z.d||100)/2;S.s=[[cx-d,cy],[cx+d,cy],[cx,cy-90]];S.t=0},
+step(dt){S.t+=dt},
+draw(){const k=2*Math.PI*P.f/P.v,w=2*Math.PI*P.f,n=P.n,c=7;
+for(let x=0;x<W;x+=c)for(let y=0;y<H;y+=c){let u=0;for(let i=0;i<n;i++)u+=Math.sin(k*Math.hypot(x+c/2-S.s[i][0],y+c/2-S.s[i][1])-w*S.t);u=u/n*.5+.5;ctx.fillStyle='rgb('+((10+u*50)|0)+','+((20+u*170)|0)+','+((40+u*200)|0)+')';ctx.fillRect(x,y,c,c)}
+for(let i=0;i<n;i++){dot(S.s[i][0],S.s[i][1],9,'#f59e0b',12);tx(String(i+1),S.s[i][0],S.s[i][1]+4,'#0a0e1a','center',11)}},
+down(x,y){for(let i=0;i<P.n;i++)if(Math.hypot(x-S.s[i][0],y-S.s[i][1])<30){drag=i+1;return 1}},
+move(x,y){S.s[drag-1]=[clamp(x,5,W-5),clamp(y,5,H-5)]},
+out(){const l=P.v/P.f;if(P.n<2)return[['λ = v/f',l,'px'],['النوع','موجات دائرية من مصدر واحد']];const d=Math.hypot(S.s[0][0]-S.s[1][0],S.s[0][1]-S.s[1][1]);return[['λ = v/f',l,'px'],['المسافة بين 1 و 2',d,'px'],['d/λ',d/l],['خطوط هدّامة (عقدية)',2*Math.floor(d/l+.5)],['خطوط بنّاءة',2*Math.floor(d/l)+1]]}};
+
+/* ===== 9. الغازات ===== */
+const gv=()=>{const m=Z.mode|0;return{V:m===2?clamp(P.T/6,25,100):m===3?60:P.V,T:m===1?300:P.T,n:P.n}};
+const gc=()=>{const cw=Math.min(200,W-130),top=70,bot=H-30;return{cw,top,bot,ch:bot-top,x0:W/2-cw/2-24}};
+K.gas={eq:'PV = nRT',hint:'اسحب المكبس لضغط الغاز أو تمديده',
+par:[q('V','الحجم V',25,100,1,100,'%'),q('T','درجة الحرارة T',200,600,10,300,'K'),q('n','عدد الجزيئات',5,60,1,30,'')],
+init(){S.p=[];for(let i=0;i<60;i++){const a=Math.random()*6.283;S.p.push([Math.random(),Math.random(),Math.cos(a),Math.sin(a)])}},
+step(dt){const g=gv(),c=gc(),sp=140*Math.sqrt(g.T/300)*dt,hg=c.ch*g.V/100;S.p.forEach(p=>{p[0]+=p[2]*sp/c.cw;p[1]+=p[3]*sp/hg;if(p[0]<0){p[0]=0;p[2]=-p[2]}if(p[0]>1){p[0]=1;p[2]=-p[2]}if(p[1]<0){p[1]=0;p[3]=-p[3]}if(p[1]>1){p[1]=1;p[3]=-p[3]}})},
+draw(){grid();const g=gv(),c=gc(),hg=c.ch*g.V/100,gt=c.bot-hg,pr=(g.n/30)*(g.T/300)*(100/g.V);
+const gr=ctx.createLinearGradient(0,gt,0,c.bot);gr.addColorStop(0,'rgba(56,189,248,.05)');gr.addColorStop(1,'rgba(56,189,248,.25)');ctx.fillStyle=gr;ctx.fillRect(c.x0,gt,c.cw,hg);
+ctx.fillStyle='#22d3ee';for(let i=0;i<g.n;i++){ctx.beginPath();ctx.arc(c.x0+S.p[i][0]*c.cw,gt+S.p[i][1]*hg,3,0,7);ctx.fill()}
+ctx.fillStyle='#64748b';ctx.fillRect(c.x0+c.cw/2-6,20,12,gt-32);ctx.fillStyle='#94a3b8';ctx.fillRect(c.x0-8,gt-12,c.cw+16,12);
+ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;ctx.strokeRect(c.x0,c.top,c.cw,c.ch);
+const gx=W-46;ctx.strokeStyle='#475569';ctx.lineWidth=2;ctx.strokeRect(gx,c.top,22,c.ch);const f=clamp(pr/10,0,1);ctx.fillStyle=f>.8?'#ef4444':'#a78bfa';ctx.fillRect(gx,c.bot-f*c.ch,22,f*c.ch);tx('P',gx+11,c.top-8,'#a78bfa','center',12);
+tx('V = '+num(g.V,0)+'%',c.x0+c.cw/2,c.bot+18,'#38bdf8','center',13);tx(num(pr)+' atm',W-12,34,'#a78bfa','right',14);tx(num(g.T,0)+' K',W-12,54,'#f59e0b','right',13)},
+down(x,y){if((Z.mode|0)>1)return;const g=gv(),c=gc(),gt=c.bot-c.ch*g.V/100;if(y>gt-40&&y<gt+10&&x>c.x0-20&&x<c.x0+c.cw+20){drag=1;return 1}},
+move(x,y){const c=gc();setP('V',100*(c.bot-y)/c.ch)},
+out(){const g=gv(),pr=(g.n/30)*(g.T/300)*(100/g.V);return[['الضغط P',pr,'atm'],['الحجم V',g.V,'%'],['الحرارة T',g.T,'K'],['P × V',pr*g.V/100],['V / T',g.V/g.T],['P / T',pr/g.T]]}};
+
+/* ===== 10. القوى والحركة ===== */
+const ig=()=>{const th=P.th*D,c=Math.cos(th),sn=Math.sin(th),ft=[W-30,H-40],Lc=Math.min((W-60)/Math.max(c,.01),(H-90)/Math.max(sn,.01)),tp=[ft[0]-Lc*c,ft[1]-Lc*sn],dist=40+S.x/8*Math.max(Lc-110,10);return{th,c,sn,ft,Lc,tp,dist,pt:[tp[0]+c*dist,tp[1]+sn*dist]}};
+K.blk={eq:'ΣF = ma',hint:'اسحب الكتلة لتغيير موضعها',
+par:[q('F','القوة F',0,100,1,30,'N'),q('m','الكتلة m',.5,20,.5,5,'kg'),q('mu','معامل الاحتكاك μ',0,1,.05,.2,''),q('th','زاوية الميل θ',0,80,1,30,'°'),q('m2','الكتلة m₂',.5,20,.5,3,'kg')],
+init(){S.x=0;S.v=0;S.a=0},
+step(dt){if(drag)return;const md=Z.md,g=9.8,m=P.m;let a=0;
+if(md==='f'){const fr=P.mu*m*g;if(S.v>0||P.F>fr)a=(P.F-fr)/m}
+else if(md==='i'){const th=P.th*D,dr=g*Math.sin(th),fr=P.mu*g*Math.cos(th);if(S.v>0||dr>fr)a=dr-fr}
+else a=(P.m2-m)*g/(m+P.m2);
+S.a=a;S.v+=a*dt;if(S.v<0&&md!=='a')S.v=0;S.x+=S.v*dt;
+if(md==='f'&&S.x>10)S.x=0;if(md==='i'&&S.x>8){S.x=0;S.v=0}if(md==='a'&&Math.abs(S.x)>1.2){S.x=0;S.v=0}},
+draw(){grid();const md=Z.md,g=9.8;
+if(md==='f'){const gy=H-40,sc=(W-130)/10,bx=40+S.x*sc,sz=56,fr=P.mu*P.m*g,fc=(S.v>0||P.F>fr)?fr:P.F;ln(0,gy,W,gy,'#475569',4);
+ctx.fillStyle='#38bdf8';ctx.shadowColor='#38bdf8';ctx.shadowBlur=14;ctx.fillRect(bx,gy-sz,sz,sz);ctx.shadowBlur=0;tx(num(P.m,1)+'kg',bx+sz/2,gy-sz/2+5,'#0a0e1a','center',13);
+if(P.F>0){arr(bx+sz+4,gy-sz/2,bx+sz+4+Math.min(P.F*1.1,110)+6,gy-sz/2,'#ef4444',3);tx('F='+P.F+'N',bx+sz+40,gy-sz/2-12,'#ef4444','center',12)}
+if(fc>0)arr(bx-4,gy-sz/2+14,bx-4-Math.min(fc*1.1,110)-6,gy-sz/2+14,'#f59e0b',3);
+if(S.v>.05)arr(bx+sz/2,gy-sz-16,bx+sz/2+Math.min(S.v*8,90),gy-sz-16,'#22c55e',2);
+tx('F (أحمر)  احتكاك (برتقالي)  v (أخضر)',W/2,24,'#64748b','center',12)}
+else if(md==='i'){const o=ig();ctx.fillStyle='#1e293b';ctx.beginPath();ctx.moveTo(o.tp[0],o.tp[1]);ctx.lineTo(o.ft[0],o.ft[1]);ctx.lineTo(o.tp[0],o.ft[1]);ctx.closePath();ctx.fill();ln(o.tp[0],o.tp[1],o.ft[0],o.ft[1],'#64748b',3);
+ctx.save();ctx.translate(o.pt[0],o.pt[1]);ctx.rotate(o.th);ctx.fillStyle='#38bdf8';ctx.fillRect(-28,-56,56,56);ctx.fillStyle='#0a0e1a';ctx.font='bold 13px Cairo';ctx.textAlign='center';ctx.fillText(num(P.m,1)+'kg',0,-24);ctx.restore();
+const cx=o.pt[0]+28*o.sn,cy=o.pt[1]-28*o.c,mg=P.m*g,N=mg*o.c,fr=(S.v>0||Math.tan(o.th)>P.mu)?P.mu*N:Math.min(P.mu*N,mg*o.sn);
+arr(cx,cy,cx,cy+Math.min(mg*.6,90),'#ef4444',2.5);arr(cx,cy,cx+o.sn*Math.min(N*.6,90),cy-o.c*Math.min(N*.6,90),'#22c55e',2.5);if(fr>.1)arr(cx,cy,cx-o.c*Math.min(fr*.6,90),cy-o.sn*Math.min(fr*.6,90),'#f59e0b',2.5);
+tx('الوزن (أحمر)  العمودي (أخضر)  الاحتكاك (برتقالي)',W/2,24,'#64748b','center',12);tx('θ = '+P.th+'°',o.ft[0]-34,o.ft[1]-8,'#38bdf8','right',13)}
+else{const px=W/2,py=46,y0=170,sc=100,x1=px-60,x2=px+60,y1=y0-S.x*sc,y2=y0+S.x*sc,s1=22+P.m*2.4,s2=22+P.m2*2.4;
+ln(x1,py,x2,py,'#94a3b8',2);ln(x1,py,x1,y1,'#94a3b8',2);ln(x2,py,x2,y2,'#94a3b8',2);dot(px,py,14,'#475569');dot(px,py,4,'#38bdf8');
+ctx.fillStyle='#38bdf8';ctx.fillRect(x1-s1/2,y1,s1,s1);ctx.fillStyle='#f59e0b';ctx.fillRect(x2-s2/2,y2,s2,s2);
+tx(num(P.m,1),x1,y1+s1/2+4,'#0a0e1a','center',12);tx(num(P.m2,1),x2,y2+s2/2+4,'#0a0e1a','center',12);tx('m₁',x1,H-16,'#38bdf8','center',13);tx('m₂',x2,H-16,'#f59e0b','center',13)}},
+down(x,y){const md=Z.md;if(md==='f'){const gy=H-40,bx=40+S.x*(W-130)/10;if(x>bx-10&&x<bx+66&&y>gy-70&&y<gy){drag=1;return 1}}
+else if(md==='i'){const o=ig();if(Math.hypot(x-(o.pt[0]+28*o.sn),y-(o.pt[1]-28*o.c))<44){drag=1;return 1}}
+else{const y2=170+S.x*100,s2=22+P.m2*2.4;if(Math.abs(x-(W/2+60))<s2/2+14&&y>y2-10&&y<y2+s2+10){drag=1;return 1}}},
+move(x,y){const md=Z.md;if(md==='f')S.x=clamp((x-68-(W-130)/10*0)/((W-130)/10)+0,0,10)-.0,S.x=clamp((x-68)/((W-130)/10),0,10);
+else if(md==='i'){const o=ig();S.x=clamp(((x-o.tp[0])*o.c+(y-o.tp[1])*o.sn-40)/Math.max(o.Lc-110,10)*8,0,8)}
+else S.x=clamp((y-(22+P.m2*2.4)/2-170)/100,-1.2,1.2);S.v=0},
+out(){const md=Z.md,g=9.8;if(md==='f')return[['التسارع a',S.a,'m/s²'],['السرعة v',S.v,'m/s'],['المسافة',S.x,'m'],['أقصى احتكاك μmg',P.mu*P.m*g,'N'],['القوة الصافية',P.F-P.mu*P.m*g,'N']];
+if(md==='i'){const th=P.th*D;return[['التسارع a',S.a,'m/s²'],['السرعة v',S.v,'m/s'],['المسافة على المستوى',S.x,'m'],['القوة العمودية N',P.m*g*Math.cos(th),'N'],['الحالة',Math.tan(th)>P.mu?'ينزلق (tanθ > μ)':'ساكن (tanθ ≤ μ)']]}
+return[['التسارع a',S.a,'m/s²'],['الشد في الحبل T',2*P.m*P.m2*g/(P.m+P.m2),'N'],['السرعة v',S.v,'m/s'],['إزاحة m₂',S.x,'m']]}};
+
+/* ===== 11. التصادمات ===== */
+const bs=m=>26+m*3;
+K.col={eq:'m₁v₁ + m₂v₂ = m₁v₁′ + m₂v₂′',hint:'اسحب الكتلتين لتغيير موضعهما ثم أفلتهما',
+par:[q('m1','الكتلة m₁',1,10,1,3,'kg',1),q('m2','الكتلة m₂',1,10,1,2,'kg',1),q('v1','السرعة v₁',-10,10,1,5,'m/s',1),q('v2','السرعة v₂',-10,10,1,-2,'m/s',1),q('e','معامل الارتداد e',0,1,.1,1,'',1)],
+init(){S.x1=3;S.x2=11;S.a=P.v1;S.b=P.v2},
+step(dt){if(drag)return;const sc=(W-40)/16,h1=bs(P.m1)/2/sc,h2=bs(P.m2)/2/sc;S.x1+=S.a*dt;S.x2+=S.b*dt;
+if(S.x2-S.x1<h1+h2&&S.a>S.b){const m1=P.m1,m2=P.m2,e=P.e,u=S.a,w=S.b;S.a=((m1-e*m2)*u+(1+e)*m2*w)/(m1+m2);S.b=((m2-e*m1)*w+(1+e)*m1*u)/(m1+m2);const mid=(S.x1+S.x2)/2;S.x1=mid-(h1+h2)/2;S.x2=mid+(h1+h2)/2}
+if(S.x1<h1){S.x1=h1;S.a=Math.abs(S.a)}if(S.x2>16-h2){S.x2=16-h2;S.b=-Math.abs(S.b)}},
+draw(){grid();const sc=(W-40)/16,y0=H*.58;ln(10,y0,W-10,y0,'#475569',4);
+[[S.x1,P.m1,'#38bdf8',S.a],[S.x2,P.m2,'#f59e0b',S.b]].forEach((b,i)=>{const sz=bs(b[1]),x=20+b[0]*sc;ctx.fillStyle=b[2];ctx.shadowColor=b[2];ctx.shadowBlur=12;ctx.fillRect(x-sz/2,y0-sz,sz,sz);ctx.shadowBlur=0;tx(b[1]+'kg',x,y0-sz/2+5,'#0a0e1a','center',12);
+if(Math.abs(b[3])>.05)arr(x,y0-sz-14,x+b[3]*9,y0-sz-14,b[2],2.5);tx(num(b[3],1)+' m/s',x,y0-sz-26,b[2],'center',12)});
+tx('p = '+num(P.m1*S.a+P.m2*S.b)+'  kg·m/s',W/2,30,'#a78bfa','center',14)},
+down(x,y){const sc=(W-40)/16,y0=H*.58;for(const i of[1,2]){const sz=bs(i===1?P.m1:P.m2),bx=20+(i===1?S.x1:S.x2)*sc;if(Math.abs(x-bx)<sz/2+8&&y>y0-sz-30&&y<y0+10){drag=i;return 1}}},
+move(x){const sc=(W-40)/16,h=bs(drag===1?P.m1:P.m2)/2/sc,v=clamp((x-20)/sc,h,16-h);if(drag===1)S.x1=v;else S.x2=v},
+up(){S.a=P.v1;S.b=P.v2},
+out(){const p0=P.m1*P.v1+P.m2*P.v2,k0=.5*P.m1*P.v1*P.v1+.5*P.m2*P.v2*P.v2;return[['الدفع قبل',p0,'kg·m/s'],['الدفع الآن',P.m1*S.a+P.m2*S.b,'kg·m/s'],['طاقة الحركة قبل',k0,'J'],['طاقة الحركة الآن',.5*P.m1*S.a*S.a+.5*P.m2*S.b*S.b,'J'],['v₁ الآن',S.a,'m/s'],['v₂ الآن',S.b,'m/s']]}};
+
+/* ===== 12. الجاذبية والمدارات ===== */
+K.orb={eq:'F = GMm/r²  ،  v = √(GM/r)  (مدار دائري)',hint:'اسحب الكوكب لتغيير موضعه، واسحب رأس السهم الأخضر لتغيير سرعته',
+par:[q('M','كتلة النجم',1,5,.5,2,'×',1),q('vf','السرعة (نسبة للدائرية)',.3,1.6,.05,1,'×',1),q('ts','سرعة المحاكاة',.5,4,.5,1.5,'×')],
+init(){const cx=W/2,cy=H/2,r0=Math.min(120,W/2-25,H/2-25),vc=Math.sqrt(P.M*3e5/r0);S.x=cx+r0;S.y=cy;S.vx=0;S.vy=-vc*P.vf;S.tr=[]},
+step(dt){if(drag)return;const GM=P.M*3e5,cx=W/2,cy=H/2,n=20,h=dt*P.ts/n;
+const acc=()=>{const dx=S.x-cx,dy=S.y-cy,r=Math.hypot(dx,dy)||1,k=-GM/(r*r*r);return[dx*k,dy*k]};
+for(let i=0;i<n;i++){let a=acc();S.vx+=a[0]*h/2;S.vy+=a[1]*h/2;S.x+=S.vx*h;S.y+=S.vy*h;a=acc();S.vx+=a[0]*h/2;S.vy+=a[1]*h/2}
+const r=Math.hypot(S.x-cx,S.y-cy);if(r<14||r>1500||isNaN(r)){K.orb.init();return}S.tr.push([S.x,S.y]);if(S.tr.length>700)S.tr.shift()},
+draw(){grid();const cx=W/2,cy=H/2;ctx.strokeStyle='rgba(56,189,248,.45)';ctx.lineWidth=1.5;ctx.beginPath();S.tr.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();
+dot(cx,cy,14,'#f59e0b',30);const tx2=S.x+S.vx*.8,ty2=S.y+S.vy*.8;arr(S.x,S.y,tx2,ty2,'#22c55e',2);dot(tx2,ty2,6,'#22c55e');dot(S.x,S.y,8,'#38bdf8',12)},
+down(x,y){if(Math.hypot(x-(S.x+S.vx*.8),y-(S.y+S.vy*.8))<24){drag=2;return 1}if(Math.hypot(x-S.x,y-S.y)<24){drag=1;return 1}},
+move(x,y){const cx=W/2,cy=H/2;if(drag===2){S.vx=(x-S.x)/.8;S.vy=(y-S.y)/.8}else{S.x=clamp(x,10,W-10);S.y=clamp(y,10,H-10);const dx=S.x-cx,dy=S.y-cy,r=Math.hypot(dx,dy)||1,vc=Math.sqrt(P.M*3e5/r)*P.vf;S.vx=dy/r*vc;S.vy=-dx/r*vc}S.tr=[]},
+out(){const GM=P.M*3e5,dx=S.x-W/2,dy=S.y-H/2,r=Math.hypot(dx,dy),v2=S.vx*S.vx+S.vy*S.vy,Eg=.5*v2-GM/r,hh=dx*S.vy-dy*S.vx,ec=Math.sqrt(Math.max(0,1+2*Eg*hh*hh/(GM*GM))),T=Eg<0?2*Math.PI*Math.sqrt(Math.pow(-GM/(2*Eg),3)/GM):'—';
+return[['المسافة r',r,'px'],['السرعة v',Math.sqrt(v2),'px/s'],['الانحراف المركزي e',ec],['المسار',Eg>=0?'مفتوح (إفلات)':ec<.05?'دائري':'إهليلجي'],['الزمن الدوري',T,'s']]}};
+
+/* ===== 13. الكهرباء الساكنة ===== */
+const fnet=i=>{const qs=[P.q1,P.q2,P.q3];let fx=0,fy=0;qs.forEach((qj,j)=>{if(j===i||!qj||!qs[i])return;const dx=S.c[i][0]-S.c[j][0],dy=S.c[i][1]-S.c[j][1],r=Math.hypot(dx,dy)||1,rm=r/100,f=.009*qs[i]*qj/(rm*rm);fx+=f*dx/r;fy+=f*dy/r});return[fx,fy]};
+K.fld={eq:'F = kq₁q₂/r²  ،  E = kq/r²',hint:'اسحب الشحنات لتغيير مواضعها وشاهد المجال والقوى',
+par:[q('q1','الشحنة q₁',-10,10,1,5,'µC'),q('q2','الشحنة q₂',-10,10,1,-5,'µC'),q('q3','الشحنة q₃',-10,10,1,0,'µC')],
+init(){S.c=[[W*.33,H*.5],[W*.67,H*.5],[W*.5,H*.22]]},
+draw(){const qs=[P.q1,P.q2,P.q3];
+for(let x=20;x<W;x+=34)for(let y=20;y<H;y+=34){let ex=0,ey=0,ok=1;qs.forEach((qq,i)=>{if(!qq)return;const dx=x-S.c[i][0],dy=y-S.c[i][1],r2=dx*dx+dy*dy,r=Math.sqrt(r2);if(r<20)ok=0;ex+=qq*dx/(r2*r+1e-9);ey+=qq*dy/(r2*r+1e-9)});
+if(!ok)continue;const m=Math.hypot(ex,ey);if(!m)continue;const l=20*(1-Math.exp(-m*4000)),ux=ex/m,uy=ey/m;arr(x-ux*l/2,y-uy*l/2,x+ux*l/2,y+uy*l/2,'rgba(56,189,248,'+(.25+.5*l/20)+')',1.5,4)}
+qs.forEach((qq,i)=>{if(!qq)return;const c=S.c[i],f=fnet(i),m=Math.hypot(f[0],f[1]);if(m>1e-6){const l=Math.min(70,70*Math.sqrt(m));arr(c[0],c[1],c[0]+f[0]/m*l,c[1]+f[1]/m*l,'#f59e0b',3)}
+dot(c[0],c[1],13,qq>0?'#ef4444':'#3b82f6',14);tx(qq>0?'+':'−',c[0],c[1]+5,'#fff','center',15);tx(Math.abs(qq)+'µC',c[0],c[1]-20,'#e2e8f0','center',11)})},
+down(x,y){const qs=[P.q1,P.q2,P.q3];let b=-1,bd=28;qs.forEach((qq,i)=>{if(!qq)return;const d=Math.hypot(x-S.c[i][0],y-S.c[i][1]);if(d<bd){bd=d;b=i}});if(b>=0){drag=b+1;return 1}},
+move(x,y){S.c[drag-1]=[clamp(x,15,W-15),clamp(y,15,H-15)]},
+out(){if(P.q1&&P.q2){const r=Math.hypot(S.c[0][0]-S.c[1][0],S.c[0][1]-S.c[1][1])/100,o=[['المسافة r₁₂',r,'m'],['القوة بين q₁ و q₂',.009*Math.abs(P.q1*P.q2)/(r*r),'N'],['النوع',P.q1*P.q2>0?'تنافر':'تجاذب']];if(P.q3){const f=fnet(0);o.push(['المحصلة على q₁',Math.hypot(f[0],f[1]),'N'])}return o}
+return[['الشحنة','منفردة — الأسهم تبيّن اتجاه المجال الكهربائي']]}};
+
+/* ===== المخططات ===== */
+const PM={l:54,r:14,t:22,b:34},pxr=()=>typeof Z.xr==='function'?Z.xr(P):Z.xr;
+K.plot={hint:'اسحب على الرسم لتحريك المؤشر، وغيّر المتغيرات من الأسفل',par:[],
+init(){S.x=pxr()[0];S.man=0;S.dir=1},
+step(dt){const[a,b]=pxr();if(!S.man&&!drag){S.x+=S.dir*(b-a)*dt*.1;if(S.x>=b){S.x=b;S.dir=-1}if(S.x<=a){S.x=a;S.dir=1}}S.x=clamp(S.x,a,b)},
+draw(){const[a,b]=pxr(),pw=W-PM.l-PM.r,ph=H-PM.t-PM.b,N=600,xs=[],ys=[],y2=[];let lo=0,hi=0;
+for(let i=0;i<=N;i++){const x=a+(b-a)*i/N,y=Z.f(x,P);xs.push(x);ys.push(y);if(isFinite(y)){lo=Math.min(lo,y);hi=Math.max(hi,y)}if(Z.f2){const v=Z.f2(x,P);y2.push(v);if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}}}
+if(hi===lo)hi=lo+1;const pd=(hi-lo)*.06;if(lo<0)lo-=pd;hi+=pd;
+const X=x=>PM.l+(x-a)/(b-a)*pw,Y=y=>PM.t+ph-(y-lo)/(hi-lo)*ph;
+for(let i=0;i<=5;i++){const gx=PM.l+pw*i/5,gy=PM.t+ph*i/5;ln(gx,PM.t,gx,PM.t+ph,'rgba(56,189,248,.1)',1);ln(PM.l,gy,PM.l+pw,gy,'rgba(56,189,248,.1)',1);tx(num(a+(b-a)*i/5),gx,H-18,'#64748b','center',10);tx(num(hi-(hi-lo)*i/5),PM.l-5,gy+4,'#64748b','right',10)}
+if(lo<0&&hi>0)ln(PM.l,Y(0),PM.l+pw,Y(0),'rgba(226,232,240,.35)',1);
+const path=(arr2,c)=>{ctx.strokeStyle=c;ctx.lineWidth=2.5;ctx.beginPath();let pen=0;for(let i=0;i<=N;i++){const y=arr2[i];if(!isFinite(y)){pen=0;continue}const px=X(xs[i]),py=Y(y);pen?ctx.lineTo(px,py):ctx.moveTo(px,py);pen=1}ctx.stroke()};
+if(Z.f2)path(y2,'#a78bfa');path(ys,'#38bdf8');
+const cy=Z.f(S.x,P);ln(X(S.x),PM.t,X(S.x),PM.t+ph,'rgba(245,158,11,.5)',1,[4,4]);if(isFinite(cy))dot(X(S.x),Y(cy),7,'#f59e0b',14);
+if(Z.f2){const c2=Z.f2(S.x,P);if(isFinite(c2))dot(X(S.x),Y(c2),6,'#a78bfa',10)}
+tx(Z.xl||'x',W-PM.r,H-3,'#94a3b8','right',12);tx(Z.yl||'y',PM.l,13,'#94a3b8','left',12)},
+down(x,y){drag=1;S.man=1;K.plot.move(x,y);return 1},
+move(x){const[a,b]=pxr();S.x=clamp(a+(x-PM.l)/(W-PM.l-PM.r)*(b-a),a,b)},
+out(){const y=Z.f(S.x,P);return Z.out?Z.out(P,S.x,y):[[Z.xl||'x',S.x],[Z.yl||'y',y]]}};
+
+/* ===== تسجيل التجارب ===== */
+function X(c,n,kk,ov,hide,x){const kd=K[kk],all=kd.par.map(d=>{const e=d.slice();if(ov&&ov[d[0]]!==undefined)e[5]=ov[d[0]];return e}),hd=(hide||'').split(',');E.push({c,n,k:kd,all,par:all.filter(d=>!hd.includes(d[0])),x:x||{}})}
+const A=(c,k,hide,l)=>l.forEach(a=>X(c,a[0],k,a[1],a[3]===undefined?hide:a[3],a[2]));
+const Pl=(c,n,eq,par,xr,f,o)=>E.push({c,n,k:K.plot,eq,all:par,par,x:Object.assign({xr,f},o||{})});
+
+A('السقوط الحر','fall','c,m',[
+['سقوط حر على الأرض',{},{pl:'الأرض'}],['سقوط على القمر',{g:1.62},{pl:'القمر'}],['سقوط على المريخ',{g:3.71},{pl:'المريخ'}],['سقوط على المشتري',{g:24.8},{pl:'المشتري'}],
+['سقوط من ارتفاع 200 م',{h:200},{pl:'الأرض'}],['ريشة في الهواء',{c:.3,m:.1},{pl:'الأرض + هواء'},''],['مظلّي بمظلة',{c:.5,m:1,h:150},{pl:'الأرض + هواء'},''],['كرة ثقيلة في الهواء',{c:.05,m:8},{pl:'الأرض + هواء'},'']]);
+A('المقذوفات','proj','h0',[
+['مقذوف بزاوية 45° (أقصى مدى)',{}],['إطلاق بزاوية 30°',{a:30}],['إطلاق بزاوية 60° (نفس مدى 30°)',{a:60}],['إطلاق بزاوية 75°',{a:75}],
+['إطلاق أفقي من منحدر 40 م',{a:0,v:20,h0:40},{},''],['مقذوف على القمر',{g:1.62}],['مقذوف على المريخ',{g:3.71}],['إطلاق من ارتفاع 30 م بزاوية 40°',{a:40,h0:30},{},'']]);
+A('البندول','pend','b',[
+['بندول بسيط 1 م',{}],['بندول قصير 0.3 م',{L:.3}],['بندول طويل 3 م',{L:3}],['بندول على القمر',{g:1.62}],['زاوية كبيرة 120°',{th:120}],['بندول مع احتكاك',{b:.25},{},''],['بندول على المشتري',{g:24.8}]]);
+A('النابض','spr','b',[
+['نابض بسيط',{}],['كتلة ثقيلة 4 كغ',{m:4}],['نابض صلب k = 80',{k:80}],['نابض مع تخميد',{b:.6},{},''],['تخميد حرج',{k:2,m:1,b:2.83},{},''],['كتلة خفيفة وسعة صغيرة',{m:.2},{y0:.3}]]);
+A('القوى والحركة','blk','th,m2',[
+['قوة على جسم بدون احتكاك',{mu:0,F:20,m:5},{md:'f',eq:'F = ma'}],['جسم مع احتكاك',{F:30,m:5,mu:.3},{md:'f',eq:'F − μmg = ma'}],['جسم ساكن (الاحتكاك أكبر من القوة)',{F:10,m:5,mu:.5},{md:'f',eq:'F ≤ μmg ⇒ a = 0'}],
+['كتلة ثقيلة 15 كغ',{F:40,m:15,mu:.1},{md:'f',eq:'F − μmg = ma'}],['قوة كبيرة 80 N',{F:80,m:4,mu:.2},{md:'f',eq:'F − μmg = ma'}],['كتلة خفيفة 0.5 كغ',{F:10,m:.5,mu:0},{md:'f',eq:'a = F/m'}]]);
+A('القوى والحركة','blk','F,m2',[
+['مستوى مائل بدون احتكاك 30°',{th:30,mu:0},{md:'i',eq:'a = g sinθ'}],['مستوى مائل مع احتكاك',{th:30,mu:.3},{md:'i',eq:'a = g(sinθ − μcosθ)'}],['جسم لا ينزلق (زاوية صغيرة)',{th:20,mu:.5},{md:'i',eq:'tanθ ≤ μ ⇒ ساكن'}],
+['مستوى شديد الانحدار 60°',{th:60,mu:.2},{md:'i',eq:'a = g(sinθ − μcosθ)'}],['انزلاق بطيء قرب الحد',{th:30,mu:.5},{md:'i',eq:'tanθ ≈ μ'}]]);
+A('القوى والحركة','blk','F,mu,th',[
+['أتوود: كتلتان متساويتان',{m:5,m2:5},{md:'a',eq:'a = (m₂ − m₁)g/(m₁ + m₂)'}],['أتوود: 3 و 5 كغ',{m:3,m2:5},{md:'a',eq:'a = (m₂ − m₁)g/(m₁ + m₂)'}],
+['أتوود: 1 و 10 كغ',{m:1,m2:10},{md:'a',eq:'a = (m₂ − m₁)g/(m₁ + m₂)'}],['أتوود: 1 و 2 كغ',{m:1,m2:2},{md:'a',eq:'a = (m₂ − m₁)g/(m₁ + m₂)'}]]);
+A('التصادمات','col','',[
+['تصادم مرن لكتلتين متساويتين',{m1:3,m2:3,v1:5,v2:0,e:1}],['جسم ثقيل يصطدم بخفيف (مرن)',{m1:8,m2:1,v1:4,v2:0,e:1}],['جسم خفيف يصطدم بثقيل (مرن)',{m1:1,m2:8,v1:6,v2:0,e:1}],
+['تصادم غير مرن تماماً',{m1:3,m2:2,v1:5,v2:-2,e:0}],['غير مرن: سرعتان متعاكستان ومتساويتان',{m1:3,m2:3,v1:5,v2:-5,e:0}],['مرن جزئياً e = 0.5',{m1:4,m2:2,v1:5,v2:-1,e:.5}],
+['مواجهة مرنة بكتلتين مختلفتين',{m1:5,m2:2,v1:4,v2:-4,e:1}],['جسم سريع يلحق بجسم بطيء',{m1:2,m2:5,v1:9,v2:2,e:1}],['التحام بعد التصادم والجسم الثاني ساكن',{m1:6,m2:2,v1:4,v2:0,e:0}]]);
+A('الجاذبية والمدارات','orb','',[
+['مدار دائري',{}],['مدار إهليلجي (0.7)',{vf:.7}],['مدار إهليلجي شديد (0.5)',{vf:.5}],['سرعة أعلى من الدائرية (1.2)',{vf:1.2}],['سرعة الإفلات (1.5)',{vf:1.5}],['نجم ثقيل (M = 5)',{M:5}],['نجم خفيف (M = 1)',{M:1}],['محاكاة سريعة',{ts:4}]]);
+A('الدوائر الكهربائية','ohm','R2',[
+['قانون أوم V = IR',{},{mode:0,eq:'I = V / R'}],['مقاومة كبيرة 80 Ω',{R1:80},{mode:0,eq:'I = V / R'}],['مقاومة صغيرة 2 Ω',{R1:2},{mode:0,eq:'I = V / R'}],
+['توصيل على التوالي',{R1:20,R2:30},{mode:1,eq:'Rt = R₁ + R₂'},''],['توالي: مقاومتان متساويتان',{R1:20,R2:20},{mode:1,eq:'Rt = R₁ + R₂'},''],
+['توصيل على التوازي',{R1:20,R2:30},{mode:2,eq:'1/Rt = 1/R₁ + 1/R₂'},''],['توازي: مقاومتان متساويتان',{R1:20,R2:20},{mode:2,eq:'1/Rt = 1/R₁ + 1/R₂'},'']]);
+A('الكهرباء الساكنة','fld','q3',[
+['شحنتان مختلفتان (تجاذب)',{q1:5,q2:-5,q3:0}],['شحنتان متشابهتان (تنافر)',{q1:5,q2:5,q3:0}],['ثنائي القطب',{q1:8,q2:-8,q3:0}],['شحنتان غير متساويتين',{q1:10,q2:-3,q3:0}],
+['ثلاث شحنات',{q1:5,q2:-5,q3:5},{},''],['ثلاث شحنات موجبة',{q1:5,q2:5,q3:5},{},''],['شحنة موجبة منفردة',{q1:6,q2:0,q3:0},{},'q2,q3'],['شحنة سالبة منفردة',{q1:-6,q2:0,q3:0},{},'q2,q3']]);
+const M1={m1:'هواء',m2:'ماء'};
+A('انكسار الضوء','ray','',[
+['هواء ← ماء',{n1:1,n2:1.33},{m1:'هواء',m2:'ماء'}],['هواء ← زجاج',{n1:1,n2:1.5},{m1:'هواء',m2:'زجاج'}],['هواء ← ألماس',{n1:1,n2:2.42},{m1:'هواء',m2:'ألماس'}],['ماء ← هواء',{n1:1.33,n2:1,a:35},{m1:'ماء',m2:'هواء'}],
+['انعكاس كلي: ماء ← هواء 60°',{n1:1.33,n2:1,a:60},{m1:'ماء',m2:'هواء'}],['انعكاس كلي: زجاج ← هواء',{n1:1.5,n2:1,a:50},{m1:'زجاج',m2:'هواء'}],['زجاج ← ماء',{n1:1.5,n2:1.33,a:40},{m1:'زجاج',m2:'ماء'}],['انعكاس كلي: ألماس ← هواء',{n1:2.42,n2:1,a:30},{m1:'ألماس',m2:'هواء'}]]);
+A('العدسات والمرايا','lens','',[
+['عدسة محدبة: جسم بعيد (d > 2f)',{f:50,d:150}],['عدسة محدبة: d = 2f',{f:50,d:100}],['عدسة محدبة: f < d < 2f',{f:50,d:75}],['عدسة محدبة: d = f (لا صورة)',{f:50,d:50}],['عدسة مكبّرة: d < f',{f:50,d:30}],
+['عدسة مقعرة',{f:50,d:100},{sg:-1}],['مرآة مقعرة: جسم بعيد',{f:50,d:150},{m:1}],['مرآة مقعرة: جسم قريب (مكبِّرة)',{f:50,d:30},{m:1}],['مرآة محدبة',{f:50,d:100},{m:1,sg:-1}]]);
+A('تداخل الأمواج','wave','',[
+['مصدران متزامنان',{}],['مصدر واحد',{n:1}],['ثلاثة مصادر',{n:3}],['مصدران متقاربان',{},{d:50}],['مصدران متباعدان',{},{d:220}],['تردد عالٍ',{f:2.5}],['موجات بطيئة',{v:50,f:.5}]]);
+A('الغازات','gas','',[
+['قانون الغاز المثالي',{},{mode:0,eq:'PV = nRT'}],['قانون بويل (T ثابتة)',{},{mode:1,eq:'P₁V₁ = P₂V₂'},'T,n'],['قانون شارل (P ثابت)',{},{mode:2,eq:'V / T = ثابت'},'V,n'],
+['قانون غاي-لوساك (V ثابت)',{},{mode:3,eq:'P / T = ثابت'},'V,n'],['غاز كثيف (60 جزيئاً)',{n:60},{mode:0,eq:'PV = nRT'}],['غاز مخلخل (10 جزيئات)',{n:10},{mode:0,eq:'PV = nRT'}]]);
+
+const C1='مخططات: الحركة والاهتزاز',C2='مخططات: الأمواج والضوء',C3='مخططات: الكهرباء',C4='مخططات: الحرارة والفيزياء الحديثة';
+Pl(C1,'الموضع–الزمن (سرعة ثابتة)','x = x₀ + v·t',[s('x0','الموضع الابتدائي x₀',-20,20,0,'m'),s('v','السرعة v',-10,10,3,'m/s',.5)],[0,10],(t,p)=>p.x0+p.v*t,{xl:'t (s)',yl:'x (m)'});
+Pl(C1,'السرعة–الزمن (تسارع ثابت)','v = u + a·t',[s('u','السرعة الابتدائية u',-10,20,2,'m/s'),s('a','التسارع a',-5,5,1.5,'m/s²',.1)],[0,10],(t,p)=>p.u+p.a*t,{xl:'t (s)',yl:'v (m/s)'});
+Pl(C1,'الإزاحة مع التسارع','x = ut + ½at²',[s('u','السرعة الابتدائية u',-10,20,2,'m/s'),s('a','التسارع a',-5,5,1.5,'m/s²',.1)],[0,10],(t,p)=>p.u*t+.5*p.a*t*t,{xl:'t (s)',yl:'x (m)'});
+Pl(C1,'معادلة السرعة والمسافة','v² = u² + 2as',[s('u','السرعة الابتدائية u',0,20,5,'m/s'),s('a','التسارع a',-5,5,2,'m/s²',.1)],[0,60],(d,p)=>Math.sqrt(p.u*p.u+2*p.a*d),{xl:'s (m)',yl:'v (m/s)'});
+Pl(C1,'مدى المقذوف مقابل الزاوية','R = v²sin2θ / g',[s('v','السرعة v₀',5,80,30,'m/s'),s('g','الجاذبية g',1,25,9.8,'m/s²',.1)],[0,90],(a,p)=>p.v*p.v*Math.sin(2*a*D)/p.g,{xl:'θ (°)',yl:'R (m)'});
+Pl(C1,'دورة البندول مقابل الطول','T = 2π√(L/g)',[s('g','الجاذبية g',1,25,9.8,'m/s²',.1)],[.05,5],(L,p)=>2*Math.PI*Math.sqrt(L/p.g),{xl:'L (m)',yl:'T (s)'});
+Pl(C1,'طاقة الحركة','KE = ½mv²',[s('m','الكتلة m',.1,10,2,'kg',.1)],[0,30],(v,p)=>.5*p.m*v*v,{xl:'v (m/s)',yl:'KE (J)'});
+Pl(C1,'قانون هوك والطاقة المرنة','F = kx  (أزرق)  ،  E = ½kx²  (بنفسجي)',[s('k','ثابت النابض k',1,100,20,'N/m')],[0,2],(x,p)=>p.k*x,{xl:'x (m)',yl:'F (N) / E (J)',f2:(x,p)=>.5*p.k*x*x});
+Pl(C1,'اهتزاز مخمد','x = A e^(−γt) cos ωt',[s('A','السعة A',.5,5,3,'m',.1),s('gm','معامل التخميد γ',0,1,.3,'1/s',.01),s('w','التردد الزاوي ω',1,10,5,'rad/s',.1)],[0,12],(t,p)=>p.A*Math.exp(-p.gm*t)*Math.cos(p.w*t),{xl:'t (s)',yl:'x (m)'});
+Pl(C1,'الرنين (منحنى الاستجابة)','A = 1 / √((ω₀² − ω²)² + (bω)²)',[s('b','التخميد b',.1,2,.4,'',.05),s('w0','التردد الطبيعي ω₀',1,5,2,'rad/s',.1)],[0,6],(w,p)=>1/Math.sqrt(Math.pow(p.w0*p.w0-w*w,2)+Math.pow(p.b*w,2)),{xl:'ω (rad/s)',yl:'السعة'});
+Pl(C1,'السرعة الحدية للسقوط','v = vₜ(1 − e^(−gt/vₜ))',[s('vt','السرعة الحدية vₜ',5,60,25,'m/s')],[0,15],(t,p)=>p.vt*(1-Math.exp(-9.8*t/p.vt)),{xl:'t (s)',yl:'v (m/s)'});
+Pl(C1,'ضغط السائل مع العمق','P = P₀ + ρgh',[s('r','كثافة السائل ρ',700,13600,1000,'kg/m³',100)],[0,100],(h,p)=>101.3+p.r*9.8*h/1000,{xl:'h (m)',yl:'P (kPa)'});
+
+Pl(C2,'النبضات (Beats)','y = sin2πf₁t + sin2πf₂t',[s('f1','التردد f₁',5,20,10,'Hz',.5),s('f2','التردد f₂',5,20,11,'Hz',.5)],[0,2],(t,p)=>Math.sin(2*Math.PI*p.f1*t)+Math.sin(2*Math.PI*p.f2*t),{xl:'t (s)',yl:'y'});
+Pl(C2,'الموجة الواقفة','y = sin(nπx)·cos(2πt)',[s('n','رقم التوافقية n',1,8,3,'',1),s('t','الزمن t',0,1,0,'T',.01)],[0,1],(x,p)=>Math.sin(p.n*Math.PI*x)*Math.cos(2*Math.PI*p.t),{xl:'x / L',yl:'y'});
+Pl(C2,'مستوى شدة الصوت','L = L₀ − 20·log₁₀ r',[s('L0','المستوى عند 1 م',60,120,90,'dB')],[1,100],(r,p)=>p.L0-20*Math.log10(r),{xl:'r (m)',yl:'L (dB)'});
+Pl(C2,'حيود الشق المزدوج','I ∝ cos²(πd sinθ/λ)·sinc²',[s('d','المسافة بين الشقين d',10,50,20,'µm'),s('l','الطول الموجي λ',400,700,550,'nm',10),s('a','عرض الشق a',1,10,4,'µm',.5)],[-6,6],(th,p)=>{const sn=Math.sin(th*D),be=Math.PI*p.a*1000*sn/p.l,al=Math.PI*p.d*1000*sn/p.l,sc=Math.abs(be)<1e-9?1:Math.sin(be)/be;return Math.pow(Math.cos(al),2)*sc*sc},{xl:'θ (°)',yl:'I / I₀'});
+Pl(C2,'قانون ماليوس (الاستقطاب)','I = I₀cos²θ',[s('I','الشدة الابتدائية I₀',10,100,100,'%')],[0,360],(a,p)=>p.I*Math.pow(Math.cos(a*D),2),{xl:'θ (°)',yl:'I (%)'});
+Pl(C2,'قانون سنيل: θ₂ مقابل θ₁','sinθ₂ = n₁sinθ₁ / n₂',[s('n1','معامل انكسار n₁',1,2.5,1,'',.01),s('n2','معامل انكسار n₂',1,2.5,1.5,'',.01)],[0,89],(a,p)=>{const v=p.n1*Math.sin(a*D)/p.n2;return v>1?NaN:Math.asin(v)/D},{xl:'θ₁ (°)',yl:'θ₂ (°)'});
+Pl(C2,'معادلة العدسة: بُعد الصورة','dᵢ = f·dₒ / (dₒ − f)',[s('f','البعد البؤري f',10,60,30,'cm',1)],p=>[p.f*1.05,p.f*6],(d,p)=>p.f*d/(d-p.f),{xl:'dₒ (cm)',yl:'dᵢ (cm)'});
+
+Pl(C3,'قانون أوم (I–V)','I = V / R',[s('R','المقاومة R',1,100,10,'Ω')],[0,24],(v,p)=>v/p.R,{xl:'V (V)',yl:'I (A)'});
+Pl(C3,'شحن المكثف وتفريغه','V = V₀(1 − e^(−t/RC))  (أزرق شحن ، بنفسجي تفريغ)',[s('V0','الجهد V₀',1,24,12,'V',1),s('R','المقاومة R',1,100,10,'kΩ'),s('C','السعة C',1,100,10,'µF')],p=>[0,5*p.R*p.C],(t,p)=>p.V0*(1-Math.exp(-t/(p.R*p.C))),{xl:'t (ms)',yl:'V (V)',f2:(t,p)=>p.V0*Math.exp(-t/(p.R*p.C)),out:(p,x,y)=>[['t',x,'ms'],['V (شحن)',y,'V'],['τ = RC',p.R*p.C,'ms']]});
+Pl(C3,'دائرة RL (نمو التيار)','I = (V/R)(1 − e^(−Rt/L))',[s('V','الجهد V',1,24,12,'V',1),s('R','المقاومة R',1,100,20,'Ω'),s('L','المحاثة L',1,1000,100,'mH',1)],p=>[0,5*p.L/p.R],(t,p)=>p.V/p.R*(1-Math.exp(-p.R*t/p.L)),{xl:'t (ms)',yl:'I (A)'});
+Pl(C3,'التيار المتردد','V = V₀ sin(2πft)',[s('V','القيمة العظمى V₀',1,340,170,'V',1),s('f','التردد f',10,100,50,'Hz',1)],[0,60],(t,p)=>p.V*Math.sin(2*Math.PI*p.f*t/1000),{xl:'t (ms)',yl:'V (V)',out:(p,x,y)=>[['t',x,'ms'],['V اللحظي',y,'V'],['V الفعّال (rms)',p.V/Math.SQRT2,'V']]});
+Pl(C3,'دائرة RLC (الرنين)','Z = √(R² + (ωL − 1/ωC)²)',[s('R','المقاومة R',1,100,20,'Ω'),s('L','المحاثة L',1,100,10,'mH',1),s('C','السعة C',1,100,10,'µF',1)],[10,2000],(f,p)=>{const w=2*Math.PI*f;return Math.hypot(p.R,w*p.L*1e-3-1/(w*p.C*1e-6))},{xl:'f (Hz)',yl:'Z (Ω)',out:(p,x,y)=>[['f',x,'Hz'],['Z',y,'Ω'],['f₀ (الرنين)',5033/Math.sqrt(p.L*p.C),'Hz']]});
+Pl(C3,'قوة كولوم مقابل المسافة','F = kq₁q₂ / r²',[s('a','الشحنة q₁',1,10,3,'µC',1),s('b','الشحنة q₂',1,10,3,'µC',1)],[.1,3],(r,p)=>.009*p.a*p.b/(r*r),{xl:'r (m)',yl:'F (N)'});
+Pl(C3,'المجال المغناطيسي لسلك مستقيم','B = μ₀I / 2πr',[s('I','التيار I',1,100,10,'A',1)],[.02,1],(r,p)=>.2*p.I/r,{xl:'r (m)',yl:'B (µT)'});
+Pl(C3,'المحوّل الكهربائي','Vₛ = Vₚ·Nₛ / Nₚ',[s('Vp','الجهد الابتدائي Vₚ',10,240,120,'V',1),s('Np','لفات الابتدائي Nₚ',50,500,100,'',10)],[0,1000],(n,p)=>p.Vp*n/p.Np,{xl:'Nₛ (لفة)',yl:'Vₛ (V)'});
+
+const heat=(Q,p)=>{const a=-2.1*p.Ti;if(Q<a)return p.Ti+Q/2.1;Q-=a;if(Q<334)return 0;Q-=334;if(Q<418)return Q/4.18;Q-=418;if(Q<2260)return 100;return 100+(Q-2260)/2};
+Pl(C4,'قانون نيوتن للتبريد','T = Tₐ + (T₀ − Tₐ)e^(−kt)',[s('T0','درجة الحرارة الابتدائية',40,100,90,'°C',1),s('Ta','حرارة المحيط',0,40,20,'°C',1),s('k','ثابت التبريد k',.01,.3,.08,'1/min',.01)],[0,60],(t,p)=>p.Ta+(p.T0-p.Ta)*Math.exp(-p.k*t),{xl:'t (min)',yl:'T (°C)'});
+Pl(C4,'منحنى تسخين الماء (جليد ← بخار)','Q = mcΔT + mL',[s('Ti','الحرارة الابتدائية للجليد',-40,-5,-20,'°C',1)],[0,3300],heat,{xl:'Q (kJ/kg)',yl:'T (°C)'});
+Pl(C4,'منحنيات تساوي الحرارة (P–V)','PV = nRT  (n = 1 mol)',[s('T','درجة الحرارة T',200,600,300,'K',10)],[1,10],(v,p)=>.08206*p.T/v,{xl:'V (L)',yl:'P (atm)',f2:(v,p)=>.08206*(p.T+150)/v});
+Pl(C4,'توزيع ماكسويل لسرعات الجزيئات','f(v) ∝ v² e^(−mv²/2kT)',[s('T','درجة الحرارة T',100,1000,300,'K',10),s('mu','كتلة الجزيء',2,44,28,'u',1)],[0,2500],(v,p)=>{const m=p.mu*1.6605e-27,kT=1.381e-23*p.T;return 4*Math.PI*Math.pow(m/(2*Math.PI*kT),1.5)*v*v*Math.exp(-m*v*v/(2*kT))*1000},{xl:'v (m/s)',yl:'f(v)'});
+Pl(C4,'كفاءة محرك كارنو','η = 1 − T꜀ / Tₕ',[s('Tc','حرارة المستودع البارد',200,400,300,'K',10)],p=>[p.Tc+10,1500],(t,p)=>100*(1-p.Tc/t),{xl:'Tₕ (K)',yl:'η (%)'});
+Pl(C4,'الاضمحلال الإشعاعي','N = N₀·2^(−t/T½)',[s('N','العدد الابتدائي N₀',10,1000,1000,'',10),s('T','عمر النصف T½',1,20,5,'day',1)],[0,60],(t,p)=>p.N*Math.pow(2,-t/p.T),{xl:'t (day)',yl:'N'});
+Pl(C4,'التأثير الكهروضوئي','Eₖ = hf − φ',[s('phi','دالة الشغل φ',1,6,2.3,'eV',.1)],[0,2000],(f,p)=>Math.max(0,.004136*f-p.phi),{xl:'f (THz)',yl:'Eₖ (eV)',out:(p,x,y)=>[['f',x,'THz'],['Eₖ',y,'eV'],['التردد الحرج',p.phi/.004136,'THz']]});
+Pl(C4,'مستويات طاقة بور','Eₙ = −13.6·Z² / n²',[s('Z','العدد الذري Z',1,3,1,'',1)],[1,8],(n,p)=>-13.6*p.Z*p.Z/(n*n),{xl:'n',yl:'E (eV)'});
+Pl(C4,'تمدد الزمن (النسبية)','t = t₀ / √(1 − v²/c²)',[s('t0','الزمن الذاتي t₀',1,10,1,'s',1)],[0,.99],(b,p)=>p.t0/Math.sqrt(1-b*b),{xl:'v / c',yl:'t (s)'});
+Pl(C4,'طيف الجسم الأسود (بلانك)','B(λ,T) ∝ 1 / (λ⁵(e^(hc/λkT) − 1))',[s('T','درجة الحرارة T',2000,10000,5800,'K',100)],[100,3000],(x,p)=>1e18/(Math.pow(x,5)*(Math.exp(1.4388e7/(x*p.T))-1)),{xl:'λ (nm)',yl:'B (نسبي)'});
+Pl(C4,'زمن دوران قمر صناعي','T = 2π√(r³ / GM)',[s('M','كتلة الكوكب',.3,10,1,'× الأرض',.1)],[6600,45000],(r,p)=>2*Math.PI*Math.sqrt(Math.pow(r*1000,3)/(3.986e14*p.M))/3600,{xl:'r (km)',yl:'T (hr)'});
+
+/* ===== الواجهة ===== */
+function build(){const c=$('ctl');c.innerHTML='';cur.par.forEach(d=>{const g=document.createElement('div');g.className='cg';g.innerHTML='<label>'+d[1]+' <b id="v_'+d[0]+'"></b></label><input type="range" id="s_'+d[0]+'" min="'+d[2]+'" max="'+d[3]+'" step="'+d[4]+'">';c.appendChild(g);
+const e=g.querySelector('input');e.value=P[d[0]];$('v_'+d[0]).textContent=num(P[d[0]])+' '+d[6];e.oninput=()=>{P[d[0]]=+e.value;$('v_'+d[0]).textContent=num(P[d[0]])+' '+d[6];if(d[7])reset()}})}
+function reset(){S={};if(cur.k.init)cur.k.init();$('pp').textContent=paused?'▶ تشغيل':'⏸ إيقاف'}
+function showOut(){const o=cur.k.out?cur.k.out():[];$('out').innerHTML=o.map(a=>'<div><span>'+a[0]+'</span><b>'+(typeof a[1]==='number'?num(a[1]):a[1])+(a[2]?' '+a[2]:'')+'</b></div>').join('')}
+function list(){$('cats').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.c===cur.c));$('lst').innerHTML=E.map((e,i)=>e.c===cur.c?'<button class="chip'+(i===idx?' on':'')+'" data-i="'+i+'">'+(i+1)+'. '+e.n+'</button>':'').join('')}
+function sel(i){idx=(i+E.length)%E.length;cur=E[idx];Z=cur.x;P={};cur.all.forEach(d=>{P[d[0]]=d[5]});drag=0;paused=false;
+$('ttl').textContent=(idx+1)+'. '+cur.n;$('eq').textContent=Z.eq||cur.eq||cur.k.eq||'';$('hint').textContent=cur.k.hint||'';list();build();reset();showOut()}
+const cs=[...new Set(E.map(e=>e.c))];
+$('cats').innerHTML=cs.map(c=>'<button class="tab" data-c="'+c+'">'+c+' <i>'+E.filter(e=>e.c===c).length+'</i></button>').join('');
+$('tg').textContent=E.length+' تجربة تفاعلية — حرّك الأجسام بإصبعك وشاهد النتائج مباشرة';
+$('cats').onclick=e=>{const b=e.target.closest('button');if(b)sel(E.findIndex(x=>x.c===b.dataset.c))};
+$('lst').onclick=e=>{const b=e.target.closest('button');if(b)sel(+b.dataset.i)};
+$('rs').onclick=()=>{paused=false;reset()};
+$('pp').onclick=()=>{paused=!paused;$('pp').textContent=paused?'▶ تشغيل':'⏸ إيقاف'};
+$('pv').onclick=()=>sel(idx-1);$('nx').onclick=()=>sel(idx+1);
+
+/* ===== المؤشر ===== */
+const pos=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+cv.addEventListener('pointerdown',e=>{const[x,y]=pos(e);if(cur.k.down&&cur.k.down(x,y)){try{cv.setPointerCapture(e.pointerId)}catch(err){}e.preventDefault()}});
+cv.addEventListener('pointermove',e=>{if(drag&&cur.k.move){const[x,y]=pos(e);cur.k.move(x,y)}});
+const stop=()=>{if(drag){const d=drag;drag=0;if(cur.k.up)cur.k.up(d)}};
+cv.addEventListener('pointerup',stop);cv.addEventListener('pointercancel',stop);
+
+/* ===== الحلقة الرئيسية ===== */
+function loop(t){requestAnimationFrame(loop);try{const dt=Math.min(Math.max((t-last)/1000,0),.05);last=t;if(!cur)return;if(!paused&&cur.k.step)cur.k.step(dt);ctx.clearRect(0,0,W,H);cur.k.draw();if(t-lo>120){lo=t;showOut()}}catch(err){console.error(err)}}
+window.addEventListener('resize',()=>{const ow=W;fit();if(cur&&Math.abs(W-ow)>1)reset()});
+fit();sel(0);requestAnimationFrame(loop);
 </script>
 </body>
 </html>
