@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المعمل الافتراضي للفيزياء</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>المعمل الافتراضي للفيزياء</h1>
+  <div class="row">
+    <span id="progress"></span>
+    <a class="btn" href="../logic-simulator/index.html" target="_blank" rel="noopener">محاكي الدوائر المنطقية</a>
+    <button id="btn-theme">الوضع الفاتح</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="side">
+    <input id="search" type="search" placeholder="ابحث عن تجربة…" aria-label="بحث">
+    <div id="chips" class="chips"></div>
+    <div id="count" class="muted"></div>
+    <div id="list" class="list"></div>
+  </aside>
+  <main class="main">
+    <div class="head">
+      <h2 id="title"></h2>
+      <div id="sub" class="muted"></div>
+    </div>
+    <div class="stage-wrap"><canvas id="stage"></canvas></div>
+    <div class="bar">
+      <button id="btn-prev">السابقة</button>
+      <button id="btn-restart">إعادة التجربة</button>
+      <button id="btn-play" class="primary">إيقاف مؤقت</button>
+      <button id="btn-next">التالية</button>
+      <a id="logic-link" class="btn" href="../logic-simulator/index.html" target="_blank" rel="noopener" hidden>ابنِ الدائرة في المحاكي</a>
+    </div>
+    <div class="cols">
+      <section><h3>المتغيرات</h3><div id="controls"></div></section>
+      <section><h3>القراءات</h3><div id="readouts"></div>
+        <div class="bar"><button id="btn-record" class="primary">سجّل القياس</button>
+        <button id="btn-csv">تصدير CSV</button><button id="btn-clear">مسح الجدول</button></div>
+      </section>
+    </div>
+    <section><h3>جدول القياسات</h3><div id="table" class="tablewrap"></div></section>
+  </main>
+</div>
+<script src="js/sims.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
