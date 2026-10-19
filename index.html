@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معمل الفيزياء التفاعلي | Interactive Physics Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Great+Vibes&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:#0a0e1a;color:#e2e8f0;min-height:100vh;line-height:1.6}
+
+/* ===== Header ===== */
+header{
+  background:linear-gradient(135deg,#1e1b4b 0%,#0f172a 50%,#0c4a6e 100%);
+  padding:2rem 1rem 2.5rem;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid rgba(56,189,248,.2);
+}
+header::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 50%,rgba(56,189,248,.15),transparent 50%),
+             radial-gradient(circle at 80% 50%,rgba(139,92,246,.15),transparent 50%);
+  pointer-events:none;
+}
+.header-inner{max-width:1200px;margin:0 auto;position:relative;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap}
+.title-block{flex:1;min-width:250px}
+h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#38bdf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3rem}
+.subtitle{color:#94a3b8;font-size:.95rem;letter-spacing:.5px}
+.tagline{color:#64748b;font-size:.85rem;margin-top:.5rem}
+
+/* ===== Signature ===== */
+.signature{
+  text-align:center;
+  padding:.8rem 1.5rem;
+  border:1px solid rgba(56,189,248,.3);
+  border-radius:16px;
+  background:rgba(15,23,42,.6);
+  backdrop-filter:blur(10px);
+  position:relative;
+}
+.signature::before{
+  content:'';
+  position:absolute;inset:0;
+  border-radius:16px;
+  padding:1px;
+  background:linear-gradient(135deg,rgba(56,189,248,.4),rgba(139,92,246,.4));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.sig-label{font-size:.7rem;color:#64748b;letter-spacing:3px;text-transform:uppercase;margin-bottom:.3rem}
+.sig-ar{font-family:'Aref Ruqaa',serif;font-size:1.9rem;font-weight:700;color:#38bdf8;line-height:1.2;text-shadow:0 0 20px rgba(56,189,248,.4)}
+.sig-en{font-family:'Great Vibes',cursive;font-size:1.6rem;color:#a78bfa;line-height:1;margin-top:.2rem;text-shadow:0 0 20px rgba(139,92,246,.4)}
+
+/* ===== Nav ===== */
+nav{
+  background:#0f172a;
+  border-bottom:1px solid rgba(56,189,248,.15);
+  position:sticky;top:0;z-index:100;
+  overflow-x:auto;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+nav::-webkit-scrollbar{height:4px}
+nav::-webkit-scrollbar-thumb{background:#38bdf8;border-radius:2px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;gap:.5rem;padding:.8rem 1rem;min-width:max-content}
+.tab{
+  padding:.6rem 1.1rem;
+  border:none;
+  background:rgba(30,41,59,.7);
+  color:#94a3b8;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:.85rem;
+  font-weight:600;
+  transition:all .25s;
+  white-space:nowrap;
+  border:1px solid transparent;
+}
+.tab:hover{background:rgba(56,189,248,.15);color:#38bdf8}
+.tab.active{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;border-color:transparent;box-shadow:0 4px 15px rgba(14,165,233,.4)}
+
+/* ===== Main ===== */
+main{max-width:1200px;margin:2rem auto;padding:0 1rem}
+.panel{display:none;animation:fadeIn .4s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(56,189,248,.15)}
+.panel-header h2{font-size:1.4rem;color:#38bdf8;margin-bottom:.4rem}
+.panel-header p{color:#94a3b8;font-size:.9rem}
+
+.exp-layout{display:grid;grid-template-columns:1fr 320px;gap:1.5rem}
+@media(max-width:900px){.exp-layout{grid-template-columns:1fr}}
+
+.canvas-wrap{
+  position:relative;
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(56,189,248,.2);
+  height:450px;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.5);
+}
+@media(max-width:900px){.canvas-wrap{height:320px}}
+.canvas-wrap canvas{width:100%;height:100%;display:block}
+
+.controls{
+  background:rgba(15,23,42,.7);
+  border:1px solid rgba(56,189,248,.2);
+  border-radius:16px;
+  padding:1.2rem;
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+.ctrl-group{display:flex;flex-direction:column;gap:.4rem}
+.ctrl-group label{
+  font-size:.85rem;
+  color:#94a3b8;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.ctrl-group label span{color:#38bdf8;font-weight:600;font-family:'Courier New',monospace}
+input[type="range"]{
+  width:100%;
+  height:6px;
+  background:#1e293b;
+  border-radius:3px;
+  outline:none;
+  -webkit-appearance:none;
+  appearance:none;
+  cursor:pointer;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:18px;height:18px;
+  background:linear-gradient(135deg,#0ea5e9,#8b5cf6);
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(14,165,233,.6);
+}
+input[type="range"]::-moz-range-thumb{
+  width:18px;height:18px;
+  background:linear-gradient(135deg,#0ea5e9,#8b5cf6);
+  border-radius:50%;
+  cursor:pointer;
+  border:none;
+  box-shadow:0 0 10px rgba(14,165,233,.6);
+}
+.readout{
+  background:rgba(2,6,23,.6);
+  border:1px solid rgba(56,189,248,.2);
+  border-radius:10px;
+  padding:.8rem;
+  font-family:'Courier New',monospace;
+  font-size:.85rem;
+  color:#38bdf8;
+  line-height:1.8;
+}
+.readout strong{color:#a78bfa}
+.btn{
+  padding:.7rem 1.2rem;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:inherit;
+  font-weight:600;
+  font-size:.9rem;
+  transition:all .2s;
+}
+.btn-primary{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;box-shadow:0 4px 15px rgba(14,165,233,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(14,165,233,.6)}
+.btn-secondary{background:rgba(30,41,59,.8);color:#94a3b8;border:1px solid rgba(56,189,248,.2)}
+.btn-secondary:hover{background:rgba(56,189,248,.15);color:#38bdf8}
+
+footer{
+  text-align:center;
+  padding:2.5rem 1rem;
+  margin-top:3rem;
+  border-top:1px solid rgba(56,189,248,.1);
+  color:#64748b;
+  font-size:.85rem;
+}
+.footer-sig{
+  margin-top:1rem;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:1.5rem;
+  flex-wrap:wrap;
+}
+.footer-sig .sig-ar{font-size:1.4rem;color:#38bdf8}
+.footer-sig .sig-en{font-size:1.2rem;color:#a78bfa}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="title-block">
+      <h1>معمل الفيزياء التفاعلي</h1>
+      <p class="subtitle">Interactive Physics Laboratory</p>
+      <p class="tagline">10 تجارب فيزيائية حقيقية — للطلاب والمهندسين</p>
+    </div>
+    <div class="signature">
+      <div class="sig-label">إشراف وتصميم</div>
+      <div class="sig-ar">أمجد موسي</div>
+      <div class="sig-en">Amgad Mousa</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="tab active" data-tab="freefall">⬇️ السقوط الحر</button>
+    <button class="tab" data-tab="projectile">🎯 المقذوفات</button>
+    <button class="tab" data-tab="pendulum">⏱️ البندول</button>
+    <button class="tab" data-tab="spring">🌀 النابض</button>
+    <button class="tab" data-tab="ohms">⚡ قانون أوم</button>
+    <button class="tab" data-tab="refraction">💡 الانكسار</button>
+    <button class="tab" data-tab="lens">🔍 العدسة</button>
+    <button class="tab" data-tab="waves">🌊 التداخل</button>
+    <button class="tab" data-tab="gas">🫧 قانون بويل</button>
+    <button class="tab" data-tab="newton">📦 قانون نيوتن</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- 1. Free Fall -->
+<section id="freefall" class="panel active">
+  <div class="panel-header">
+    <h2>⬇️ السقوط الحر</h2>
+    <p>ادرس حركة جسم يسقط تحت تأثير الجاذبية، مع وبدون مقاومة الهواء.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="ffCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>عجلة الجاذبية g <span id="ffGval">9.8 m/s²</span></label>
+        <input type="range" id="ffGravity" min="1" max="20" step="0.1" value="9.8">
+      </div>
+      <div class="ctrl-group">
+        <label><span>مقاومة الهواء</span><input type="checkbox" id="ffAir" style="transform:scale(1.3)"></label>
+      </div>
+      <div class="ctrl-group">
+        <label>الارتفاع الابتدائي h₀ <span id="ffHval">100 m</span></label>
+        <input type="range" id="ffHeight" min="20" max="200" step="10" value="100">
+      </div>
+      <div class="readout" id="ffReadout">
+        الزمن: <strong>0.00</strong> s<br>
+        السرعة: <strong>0.00</strong> m/s<br>
+        الارتفاع: <strong>100.00</strong> m
+      </div>
+      <button class="btn btn-primary" onclick="ff.reset()">🔄 إعادة السقوط</button>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Projectile -->
+<section id="projectile" class="panel">
+  <div class="panel-header">
+    <h2>🎯 حركة المقذوفات</h2>
+    <p>ادرس مسار جسم يُقذف بزاوية وسرعة ابتدائية، واحسب المدى والارتفاع الأقصى.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="projCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>زاوية الإطلاق θ <span id="projAval">45°</span></label>
+        <input type="range" id="projAngle" min="5" max="85" step="1" value="45">
+      </div>
+      <div class="ctrl-group">
+        <label>السرعة الابتدائية v₀ <span id="projVval">30 m/s</span></label>
+        <input type="range" id="projVel" min="5" max="60" step="1" value="30">
+      </div>
+      <div class="readout" id="projReadout">
+        المدى R: <strong>0</strong> m<br>
+        أقصى ارتفاع H: <strong>0</strong> m<br>
+        زمن الطيران T: <strong>0</strong> s
+      </div>
+      <button class="btn btn-primary" onclick="proj.launch()">🚀 أطلق!</button>
+      <button class="btn btn-secondary" onclick="proj.reset()">مسح</button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Pendulum -->
+<section id="pendulum" class="panel">
+  <div class="panel-header">
+    <h2>⏱️ البندول البسيط</h2>
+    <p>ادرس الحركة التوافقية للبندول، وقس الزمن الدوري بدقة.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="pendCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>طول الخيط L <span id="pendLval">1.0 m</span></label>
+        <input type="range" id="pendLength" min="0.3" max="2.5" step="0.1" value="1.0">
+      </div>
+      <div class="ctrl-group">
+        <label>الجاذبية g <span id="pendGval">9.8 m/s²</span></label>
+        <input type="range" id="pendGravity" min="1" max="20" step="0.1" value="9.8">
+      </div>
+      <div class="ctrl-group">
+        <label>زاوية البداية θ₀ <span id="pendAval">30°</span></label>
+        <input type="range" id="pendAngle" min="5" max="80" step="1" value="30">
+      </div>
+      <div class="readout" id="pendReadout">
+        الزمن الدوري T: <strong>0.00</strong> s<br>
+        الزاوية الحالية: <strong>0.0</strong>°<br>
+        السرعة الزاوية ω: <strong>0.00</strong> rad/s
+      </div>
+      <button class="btn btn-primary" onclick="pend.reset()">🔄 إعادة</button>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Spring -->
+<section id="spring" class="panel">
+  <div class="panel-header">
+    <h2>🌀 الحركة التوافقية للنابض</h2>
+    <p>ادرس تذبذب كتلة معلقة بنابض، واحسب التردد والزمن الدوري.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="springCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>الكتلة m <span id="sprMval">0.5 kg</span></label>
+        <input type="range" id="sprMass" min="0.1" max="3" step="0.1" value="0.5">
+      </div>
+      <div class="ctrl-group">
+        <label>ثابت النابض k <span id="sprKval">20 N/m</span></label>
+        <input type="range" id="sprK" min="5" max="100" step="1" value="20">
+      </div>
+      <div class="ctrl-group">
+        <label>السعة A <span id="sprAval">0.8 m</span></label>
+        <input type="range" id="sprAmp" min="0.2" max="1.5" step="0.1" value="0.8">
+      </div>
+      <div class="readout" id="sprReadout">
+        التردد الزاوي ω: <strong>0.00</strong> rad/s<br>
+        الزمن الدوري T: <strong>0.00</strong> s<br>
+        التردد f: <strong>0.00</strong> Hz
+      </div>
+      <button class="btn btn-primary" onclick="spr.reset()">🔄 إعادة</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Ohm's Law -->
+<section id="ohms" class="panel">
+  <div class="panel-header">
+    <h2>⚡ قانون أوم</h2>
+    <p>ادرس العلاقة بين الجهد والتيار والمقاومة في دائرة كهربائية بسيطة.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="ohmsCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>الجهد V <span id="ohmVval">12 V</span></label>
+        <input type="range" id="ohmVoltage" min="1" max="24" step="0.5" value="12">
+      </div>
+      <div class="ctrl-group">
+        <label>المقاومة R <span id="ohmRval">6 Ω</span></label>
+        <input type="range" id="ohmResistance" min="1" max="100" step="1" value="6">
+      </div>
+      <div class="readout" id="ohmReadout">
+        التيار I = V/R: <strong>2.00</strong> A<br>
+        القدرة P = V·I: <strong>24.0</strong> W<br>
+        الطاقة/ث P: <strong>24.0</strong> J/s
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Refraction -->
+<section id="refraction" class="panel">
+  <div class="panel-header">
+    <h2>💡 انكسار الضوء — قانون سنيل</h2>
+    <p>ادرس انكسار الضوء بين وسطين، وزاوية الانعكاس الكلي.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="refrCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>زاوية السقوط θ₁ <span id="refrAval">30°</span></label>
+        <input type="range" id="refrAngle" min="0" max="89" step="1" value="30">
+      </div>
+      <div class="ctrl-group">
+        <label>معامل انكسار الوسط 1 n₁ <span id="refrN1val">1.00</span></label>
+        <input type="range" id="refrN1" min="1" max="2.5" step="0.01" value="1.00">
+      </div>
+      <div class="ctrl-group">
+        <label>معامل انكسار الوسط 2 n₂ <span id="refrN2val">1.33</span></label>
+        <input type="range" id="refrN2" min="1" max="2.5" step="0.01" value="1.33">
+      </div>
+      <div class="readout" id="refrReadout">
+        زاوية الانكسار θ₂: <strong>0</strong>°<br>
+        الزاوية الحرجة: <strong>—</strong><br>
+        <span id="refrStatus" style="color:#22d3ee">انتقال طبيعي</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Lens -->
+<section id="lens" class="panel">
+  <div class="panel-header">
+    <h2>🔍 العدسة المحدبة — الرسم الشعاعي</h2>
+    <p>ادرس تكوين الصور في العدسة المحدبة وحساب التكبير.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="lensCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>البعد البؤري f <span id="lensFval">50 cm</span></label>
+        <input type="range" id="lensF" min="20" max="120" step="5" value="50">
+      </div>
+      <div class="ctrl-group">
+        <label>بُعد الجسم dₒ <span id="lensDval">100 cm</span></label>
+        <input type="range" id="lensD" min="10" max="300" step="5" value="100">
+      </div>
+      <div class="ctrl-group">
+        <label>ارتفاع الجسم hₒ <span id="lensHval">30 cm</span></label>
+        <input type="range" id="lensH" min="10" max="60" step="5" value="30">
+      </div>
+      <div class="readout" id="lensReadout">
+        بُعد الصورة dᵢ: <strong>0</strong> cm<br>
+        التكبير m: <strong>0</strong><br>
+        نوع الصورة: <strong>—</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Wave Interference -->
+<section id="waves" class="panel">
+  <div class="panel-header">
+    <h2>🌊 تداخل الأمواج</h2>
+    <p>ادرس أنماط التداخل البنّاء والهدّام من مصدرين موجيين.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="waveCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>التردد f <span id="waveFval">1.0 Hz</span></label>
+        <input type="range" id="waveFreq" min="0.2" max="3" step="0.1" value="1.0">
+      </div>
+      <div class="ctrl-group">
+        <label>المسافة بين المصدرين d <span id="waveDval">80 px</span></label>
+        <input type="range" id="waveSep" min="30" max="200" step="5" value="80">
+      </div>
+      <div class="ctrl-group">
+        <label>سرعة الموجة v <span id="waveVval">100 px/s</span></label>
+        <input type="range" id="waveVel" min="30" max="200" step="10" value="100">
+      </div>
+      <div class="readout" id="waveReadout">
+        الطول الموجي λ = v/f: <strong>100</strong> px<br>
+        عدد الخطوط العقدية: <strong>3</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. Boyle's Law -->
+<section id="gas" class="panel">
+  <div class="panel-header">
+    <h2>🫧 قانون بويل للغازات</h2>
+    <p>ادرس العلاقة بين ضغط الغاز وحجمه عند ثبوت درجة الحرارة (P ∝ 1/V).</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="gasCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>حجم الغاز V <span id="gasVval">100%</span></label>
+        <input type="range" id="gasVol" min="25" max="100" step="1" value="100">
+      </div>
+      <div class="ctrl-group">
+        <label>درجة الحرارة T <span id="gasTval">300 K</span></label>
+        <input type="range" id="gasTemp" min="200" max="500" step="10" value="300">
+      </div>
+      <div class="readout" id="gasReadout">
+        الضغط P: <strong>1.00</strong> atm<br>
+        P·V: <strong>1.00</strong><br>
+        عدد الجزيئات: <strong>ثابت</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. Newton's 2nd Law -->
+<section id="newton" class="panel">
+  <div class="panel-header">
+    <h2>📦 قانون نيوتن الثاني (F = ma)</h2>
+    <p>ادرس تأثير القوة والكتلة والاحتكاك على تسارع جسم وحركته.</p>
+  </div>
+  <div class="exp-layout">
+    <div class="canvas-wrap"><canvas id="newtonCanvas"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>القوة المؤثرة F <span id="nwtFval">20 N</span></label>
+        <input type="range" id="nwtForce" min="0" max="100" step="1" value="20">
+      </div>
+      <div class="ctrl-group">
+        <label>الكتلة m <span id="nwtMval">2 kg</span></label>
+        <input type="range" id="nwtMass" min="0.5" max="10" step="0.1" value="2">
+      </div>
+      <div class="ctrl-group">
+        <label>معامل الاحتكاك μ <span id="nwtMuval">0.1</span></label>
+        <input type="range" id="nwtMu" min="0" max="1" step="0.05" value="0.1">
+      </div>
+      <div class="readout" id="nwtReadout">
+        التسارع a = (F-μmg)/m: <strong>0.00</strong> m/s²<br>
+        السرعة v: <strong>0.00</strong> m/s<br>
+        المسافة: <strong>0.00</strong> m
+      </div>
+      <button class="btn btn-primary" onclick="nwt.reset()">🔄 إعادة</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>معمل الفيزياء التفاعلي — تجارب حقيقية في متصفحك</p>
+  <div class="footer-sig">
+    <span class="sig-ar">أمجد موسي</span>
+    <span class="sig-en">Amgad Mousa</span>
+  </div>
+</footer>
+
+<script>
+// ========== أدوات مساعدة ==========
+function getCtx(canvasId){
+  const c = document.getElementById(canvasId);
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.getBoundingClientRect();
+  c.width = rect.width * dpr;
+  c.height = rect.height * dpr;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return { ctx, w: rect.width, h: rect.height, canvas: c };
+}
+
+function drawGrid(ctx,w,h,step=40){
+  ctx.strokeStyle='rgba(56,189,248,.06)';
+  ctx.lineWidth=1;
+  for(let x=0;x<w;x+=step){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<h;y+=step){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+}
+
+let activeExp = null;
+let lastT = 0;
+function loop(t){
+  const dt = Math.min((t-lastT)/1000, 0.05);
+  lastT = t;
+  if(activeExp && activeExp.update){
+    activeExp.update(dt);
+    activeExp.draw();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ========== 1. Free Fall ==========
+const ff = (() => {
+  const {ctx,w,h} = getCtx('ffCanvas');
+  let state = { t:0, y:0, v:0, done:false, trail:[] };
+  let g = 9.8, air = false, h0 = 100;
+
+  const readout = document.getElementById('ffReadout');
+  const gSlider = document.getElementById('ffGravity');
+  const hSlider = document.getElementById('ffHeight');
+  const airBox = document.getElementById('ffAir');
+  const gVal = document.getElementById('ffGval');
+  const hVal = document.getElementById('ffHval');
+
+  gSlider.oninput = () => { g = +gSlider.value; gVal.textContent = g.toFixed(1)+' m/s²'; };
+  hSlider.oninput = () => { h0 = +hSlider.value; hVal.textContent = h0+' m'; reset(); };
+  airBox.onchange = () => { air = airBox.checked; reset(); };
+
+  function reset(){ state = { t:0, y:0, v:0, done:false, trail:[] }; }
+
+  function update(dt){
+    if(state.done) return;
+    state.t += dt;
+    const term = 25; // terminal velocity
+    let a = g;
+    if(air) a = g * (1 - state.v/term);
+    state.v += a*dt;
+    state.y += state.v*dt;
+    if(state.y >= h0){ state.y = h0; state.done = true; }
+    state.trail.push(state.y);
+    if(state.trail.length > 100) state.trail.shift();
+    readout.innerHTML = `الزمن: <strong>${state.t.toFixed(2)}</strong> s<br>السرعة: <strong>${state.v.toFixed(2)}</strong> m/s<br>الارتفاع: <strong>${(h0-state.y).toFixed(2)}</strong> m`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const pad = 40;
+    const scale = (h - pad*2) / h0;
+    const ballX = w/2;
+    const ballY = pad + state.y*scale;
+
+    // ground
+    ctx.fillStyle='#1e293b';
+    ctx.fillRect(pad, h-pad, w-pad*2, 2);
+
+    // height marks
+    ctx.fillStyle='#64748b';
+    ctx.font='11px monospace';
+    for(let i=0;i<=5;i++){
+      const yy = pad + (h-pad*2)*i/5;
+      ctx.fillText((h0*(i/5)).toFixed(0)+'m', 5, yy+4);
+      ctx.strokeStyle='rgba(56,189,248,.15)';
+      ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-pad,yy);ctx.stroke();
+    }
+
+    // trail
+    ctx.strokeStyle='rgba(56,189,248,.3)';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    state.trail.forEach((y,i)=>{
+      const yy = pad + y*scale;
+      if(i===0)ctx.moveTo(ballX,yy); else ctx.lineTo(ballX,yy);
+    });
+    ctx.stroke();
+
+    // ball
+    ctx.fillStyle='#38bdf8';
+    ctx.shadowColor='#38bdf8';
+    ctx.shadowBlur=20;
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, 12, 0, Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur=0;
+
+    // velocity arrow
+    if(state.v>0){
+      ctx.strokeStyle='#f59e0b';
+      ctx.fillStyle='#f59e0b';
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(ballX+20, ballY);
+      ctx.lineTo(ballX+20, ballY+Math.min(state.v*2,80));
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(ballX+20, ballY+Math.min(state.v*2,80));
+      ctx.lineTo(ballX+16, ballY+Math.min(state.v*2,80)-8);
+      ctx.lineTo(ballX+24, ballY+Math.min(state.v*2,80)-8);
+      ctx.fill();
+    }
+  }
+
+  return { update, draw, reset };
+})();
+
+// ========== 2. Projectile ==========
+const proj = (() => {
+  const {ctx,w,h} = getCtx('projCanvas');
+  let state = { running:false, t:0, x:0, y:0, trail:[], landed:false };
+  let angle = 45, v0 = 30, g = 9.8;
+
+  const readout = document.getElementById('projReadout');
+  const aSlider = document.getElementById('projAngle');
+  const vSlider = document.getElementById('projVel');
+  const aVal = document.getElementById('projAval');
+  const vVal = document.getElementById('projVval');
+
+  function calc(){
+    const rad = angle*Math.PI/180;
+    const R = v0*v0*Math.sin(2*rad)/g;
+    const H = v0*v0*Math.sin(rad)*Math.sin(rad)/(2*g);
+    const T = 2*v0*Math.sin(rad)/g;
+    readout.innerHTML = `المدى R: <strong>${R.toFixed(1)}</strong> m<br>أقصى ارتفاع H: <strong>${H.toFixed(1)}</strong> m<br>زمن الطيران T: <strong>${T.toFixed(2)}</strong> s`;
+  }
+
+  aSlider.oninput = () => { angle=+aSlider.value; aVal.textContent=angle+'°'; calc(); };
+  vSlider.oninput = () => { v0=+vSlider.value; vVal.textContent=v0+' m/s'; calc(); };
+
+  function launch(){
+    state = { running:true, t:0, x:0, y:0, trail:[], landed:false };
+  }
+  function reset(){
+    state = { running:false, t:0, x:0, y:0, trail:[], landed:false };
+    calc();
+  }
+
+  function update(dt){
+    if(!state.running || state.landed) return;
+    state.t += dt;
+    const rad = angle*Math.PI/180;
+    state.x = v0*Math.cos(rad)*state.t;
+    state.y = v0*Math.sin(rad)*state.t - 0.5*g*state.t*state.t;
+    if(state.y < 0){ state.y = 0; state.landed = true; state.running = false; }
+    state.trail.push({x:state.x, y:state.y});
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const pad = 40;
+    const groundY = h - pad;
+    const scaleX = (w - pad*2) / 200; // 200m max
+    const scaleY = (h - pad*2) / 60;  // 60m max
+
+    // ground
+    ctx.fillStyle='#1e293b';
+    ctx.fillRect(pad, groundY, w-pad*2, 2);
+
+    // launcher
+    ctx.fillStyle='#8b5cf6';
+    ctx.beginPath();
+    ctx.arc(pad, groundY, 8, 0, Math.PI*2);
+    ctx.fill();
+
+    // trail
+    ctx.strokeStyle='#38bdf8';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    state.trail.forEach((p,i)=>{
+      const px = pad + p.x*scaleX;
+      const py = groundY - p.y*scaleY;
+      if(i===0)ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    });
+    ctx.stroke();
+
+    // ball
+    if(state.running || state.landed){
+      const px = pad + state.x*scaleX;
+      const py = groundY - state.y*scaleY;
+      ctx.fillStyle='#f59e0b';
+      ctx.shadowColor='#f59e0b';
+      ctx.shadowBlur=15;
+      ctx.beginPath();
+      ctx.arc(px,py,8,0,Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur=0;
+    }
+  }
+
+  return { update, draw, launch, reset };
+})();
+
+// ========== 3. Pendulum ==========
+const pend = (() => {
+  const {ctx,w,h} = getCtx('pendCanvas');
+  let state = { theta: 30*Math.PI/180, omega: 0 };
+  let L = 1.0, g = 9.8, theta0 = 30;
+
+  const readout = document.getElementById('pendReadout');
+  const LSlider = document.getElementById('pendLength');
+  const gSlider = document.getElementById('pendGravity');
+  const aSlider = document.getElementById('pendAngle');
+  const Lval = document.getElementById('pendLval');
+  const gVal = document.getElementById('pendGval');
+  const aVal = document.getElementById('pendAval');
+
+  LSlider.oninput = () => { L=+LSlider.value; Lval.textContent=L.toFixed(1)+' m'; reset(); };
+  gSlider.oninput = () => { g=+gSlider.value; gVal.textContent=g.toFixed(1)+' m/s²'; reset(); };
+  aSlider.oninput = () => { theta0=+aSlider.value; aVal.textContent=theta0+'°'; reset(); };
+
+  function reset(){
+    state = { theta: theta0*Math.PI/180, omega: 0 };
+  }
+
+  function update(dt){
+    // θ'' = -(g/L)sin(θ)
+    const alpha = -(g/L)*Math.sin(state.theta);
+    state.omega += alpha*dt;
+    state.theta += state.omega*dt;
+    const T = 2*Math.PI*Math.sqrt(L/g);
+    readout.innerHTML = `الزمن الدوري T: <strong>${T.toFixed(2)}</strong> s<br>الزاوية الحالية: <strong>${(state.theta*180/Math.PI).toFixed(1)}</strong>°<br>السرعة الزاوية ω: <strong>${state.omega.toFixed(2)}</strong> rad/s`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const pivotX = w/2;
+    const pivotY = 40;
+    const maxLen = Math.min(w,h) - 120;
+    const scale = maxLen / 2.5; // max L = 2.5
+    const len = L*scale;
+    const bobX = pivotX + len*Math.sin(state.theta);
+    const bobY = pivotY + len*Math.cos(state.theta);
+
+    // ceiling
+    ctx.fillStyle='#1e293b';
+    ctx.fillRect(pivotX-40, pivotY-8, 80, 6);
+
+    // string
+    ctx.strokeStyle='#94a3b8';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(pivotX,pivotY);
+    ctx.lineTo(bobX,bobY);
+    ctx.stroke();
+
+    // pivot
+    ctx.fillStyle='#38bdf8';
+    ctx.beginPath();
+    ctx.arc(pivotX,pivotY,6,0,Math.PI*2);
+    ctx.fill();
+
+    // bob
+    ctx.fillStyle='#f59e0b';
+    ctx.shadowColor='#f59e0b';
+    ctx.shadowBlur=20;
+    ctx.beginPath();
+    ctx.arc(bobX,bobY,18,0,Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur=0;
+
+    // angle arc
+    ctx.strokeStyle='rgba(56,189,248,.4)';
+    ctx.beginPath();
+    ctx.arc(pivotX,pivotY,50,Math.PI/2 - Math.PI/2, Math.PI/2 - Math.PI/2 + state.theta);
+    ctx.stroke();
+  }
+
+  return { update, draw, reset };
+})();
+
+// ========== 4. Spring ==========
+const spr = (() => {
+  const {ctx,w,h} = getCtx('springCanvas');
+  let state = { t: 0 };
+  let m = 0.5, k = 20, A = 0.8;
+
+  const readout = document.getElementById('sprReadout');
+  const mSlider = document.getElementById('sprMass');
+  const kSlider = document.getElementById('sprK');
+  const aSlider = document.getElementById('sprAmp');
+  const mVal = document.getElementById('sprMval');
+  const kVal = document.getElementById('sprKval');
+  const aVal = document.getElementById('sprAval');
+
+  mSlider.oninput = () => { m=+mSlider.value; mVal.textContent=m.toFixed(1)+' kg'; };
+  kSlider.oninput = () => { k=+kSlider.value; kVal.textContent=k+' N/m'; };
+  aSlider.oninput = () => { A=+aSlider.value; aVal.textContent=A.toFixed(1)+' m'; };
+
+  function reset(){ state.t = 0; }
+
+  function update(dt){
+    state.t += dt;
+    const omega = Math.sqrt(k/m);
+    const T = 2*Math.PI/omega;
+    const f = 1/T;
+    readout.innerHTML = `التردد الزاوي ω: <strong>${omega.toFixed(2)}</strong> rad/s<br>الزمن الدوري T: <strong>${T.toFixed(2)}</strong> s<br>التردد f: <strong>${f.toFixed(2)}</strong> Hz`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const omega = Math.sqrt(k/m);
+    const y = A*Math.cos(omega*state.t);
+    const scale = 100;
+    const anchorX = w/2;
+    const anchorY = 40;
+    const restLen = 120;
+    const bobY = anchorY + restLen + y*scale;
+
+    // ceiling
+    ctx.fillStyle='#1e293b';
+    ctx.fillRect(anchorX-50, anchorY-8, 100, 6);
+
+    // spring (zigzag)
+    ctx.strokeStyle='#38bdf8';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(anchorX, anchorY);
+    const segments = 12;
+    const springLen = bobY - anchorY - 20;
+    for(let i=1;i<=segments;i++){
+      const yy = anchorY + (springLen*i/segments);
+      const xx = anchorX + (i%2===0 ? -18 : 18);
+      ctx.lineTo(xx, yy);
+    }
+    ctx.lineTo(anchorX, bobY-20);
+    ctx.stroke();
+
+    // mass
+    ctx.fillStyle='#f59e0b';
+    ctx.shadowColor='#f59e0b';
+    ctx.shadowBlur=20;
+    ctx.fillRect(anchorX-30, bobY-20, 60, 40);
+    ctx.shadowBlur=0;
+
+    // label
+    ctx.fillStyle='#e2e8f0';
+    ctx.font='14px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('m = '+m+' kg', anchorX, bobY+70);
+    ctx.textAlign='right';
+
+    // equilibrium line
+    ctx.strokeStyle='rgba(56,189,248,.3)';
+    ctx.setLineDash([5,5]);
+    ctx.beginPath();
+    ctx.moveTo(anchorX-80, anchorY+restLen);
+    ctx.lineTo(anchorX+80, anchorY+restLen);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  return { update, draw, reset };
+})();
+
+// ========== 5. Ohm's Law ==========
+const ohm = (() => {
+  const {ctx,w,h} = getCtx('ohmsCanvas');
+  let V = 12, R = 6;
+  let phase = 0;
+
+  const readout = document.getElementById('ohmReadout');
+  const vSlider = document.getElementById('ohmVoltage');
+  const rSlider = document.getElementById('ohmResistance');
+  const vVal = document.getElementById('ohmVval');
+  const rVal = document.getElementById('ohmRval');
+
+  vSlider.oninput = () => { V=+vSlider.value; vVal.textContent=V.toFixed(1)+' V'; };
+  rSlider.oninput = () => { R=+rSlider.value; rVal.textContent=R+' Ω'; };
+
+  function update(dt){
+    phase += dt * (V/R) * 2;
+    const I = V/R;
+    const P = V*I;
+    readout.innerHTML = `التيار I = V/R: <strong>${I.toFixed(2)}</strong> A<br>القدرة P = V·I: <strong>${P.toFixed(1)}</strong> W<br>الطاقة/ث P: <strong>${P.toFixed(1)}</strong> J/s`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+
+    const cx=w/2, cy=h/2;
+    const bw = Math.min(400, w-100);
+    const bh = Math.min(250, h-100);
+    const left = cx-bw/2, top = cy-bh/2;
+    const right = cx+bw/2, bottom = cy+bh/2;
+
+    // wires
+    ctx.strokeStyle='#38bdf8';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(left, top); ctx.lineTo(right, top); ctx.lineTo(right, bottom); ctx.lineTo(left, bottom); ctx.closePath();
+    ctx.stroke();
+
+    // battery (left side)
+    ctx.fillStyle='#f59e0b';
+    ctx.fillRect(left-15, cy-40, 30, 15);
+    ctx.fillRect(left-8, cy-25, 16, 8);
+    ctx.fillStyle='#e2e8f0';
+    ctx.font='12px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('+', left, cy-50);
+    ctx.fillText('−', left, cy+50);
+    ctx.fillText(V+'V', left-45, cy+5);
+
+    // resistor (top)
+    const rx = cx-60, ry = top-15, rw=120, rh=30;
+    ctx.fillStyle='#1e293b';
+    ctx.strokeStyle='#a78bfa';
+    ctx.lineWidth=3;
+    ctx.fillRect(rx, ry, rw, rh);
+    ctx.strokeRect(rx, ry, rw, rh);
+    ctx.fillStyle='#a78bfa';
+    ctx.font='bold 14px monospace';
+    ctx.fillText(R+'Ω', cx, cy-rh/2);
+
+    // current animation (dots on wire)
+    const I = V/R;
+    const speed = Math.min(I*30, 100);
+    const perim = 2*(bw+bh);
+    const numDots = 12;
+    ctx.fillStyle='#22d3ee';
+    for(let i=0;i<numDots;i++){
+      let t = ((i/numDots) + (phase*speed/100)) % 1;
+      let dist = t*perim;
+      let px, py;
+      if(dist < bw){ px=left+dist; py=top; }
+      else if(dist < bw+bh){ px=right; py=top+(dist-bw); }
+      else if(dist < 2*bw+bh){ px=right-(dist-bw-bh); py=bottom; }
+      else { px=left; py=bottom-(dist-2*bw-bh); }
+      ctx.shadowColor='#22d3ee';
+      ctx.shadowBlur=10;
+      ctx.beginPath();
+      ctx.arc(px, py, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+    ctx.textAlign='right';
+  }
+
+  return { update, draw };
+})();
+
+// ========== 6. Refraction ==========
+const refr = (() => {
+  const {ctx,w,h} = getCtx('refrCanvas');
+  let angle1 = 30, n1 = 1.00, n2 = 1.33;
+
+  const readout = document.getElementById('refrReadout');
+  const aSlider = document.getElementById('refrAngle');
+  const n1Slider = document.getElementById('refrN1');
+  const n2Slider = document.getElementById('refrN2');
+  const aVal = document.getElementById('refrAval');
+  const n1Val = document.getElementById('refrN1val');
+  const n2Val = document.getElementById('refrN2val');
+  const status = document.getElementById('refrStatus');
+
+  aSlider.oninput = () => { angle1=+aSlider.value; aVal.textContent=angle1+'°'; };
+  n1Slider.oninput = () => { n1=+n1Slider.value; n1Val.textContent=n1.toFixed(2); };
+  n2Slider.oninput = () => { n2=+n2Slider.value; n2Val.textContent=n2.toFixed(2); };
+
+  function update(){}
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const cx = w/2;
+    const cy = h/2;
+
+    // media
+    const grad1 = ctx.createLinearGradient(0,0,0,cy);
+    grad1.addColorStop(0,'rgba(56,189,248,.08)');
+    grad1.addColorStop(1,'rgba(56,189,248,.15)');
+    ctx.fillStyle=grad1;
+    ctx.fillRect(0,0,w,cy);
+
+    const grad2 = ctx.createLinearGradient(0,cy,0,h);
+    grad2.addColorStop(0,'rgba(139,92,246,.15)');
+    grad2.addColorStop(1,'rgba(139,92,246,.08)');
+    ctx.fillStyle=grad2;
+    ctx.fillRect(0,cy,w,h-cy);
+
+    // interface
+    ctx.strokeStyle='#e2e8f0';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(0,cy);
+    ctx.lineTo(w,cy);
+    ctx.stroke();
+
+    // normal
+    ctx.setLineDash([5,5]);
+    ctx.strokeStyle='rgba(226,232,240,.5)';
+    ctx.beginPath();
+    ctx.moveTo(cx,0);
+    ctx.lineTo(cx,h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // labels
+    ctx.fillStyle='#38bdf8';
+    ctx.font='13px monospace';
+    ctx.textAlign='right';
+    ctx.fillText('n₁ = '+n1.toFixed(2), w-20, 30);
+    ctx.fillStyle='#a78bfa';
+    ctx.fillText('n₂ = '+n2.toFixed(2), w-20, h-20);
+
+    // incident ray
+    const rad1 = angle1*Math.PI/180;
+    const len = Math.min(w,h)*0.7;
+    const ix = cx - Math.sin(rad1)*len;
+    const iy = cy - Math.cos(rad1)*len;
+
+    ctx.strokeStyle='#f59e0b';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(ix,iy);
+    ctx.lineTo(cx,cy);
+    ctx.stroke();
+
+    // arrow head
+    ctx.fillStyle='#f59e0b';
+    ctx.beginPath();
+    ctx.arc(cx,cy,5,0,Math.PI*2);
+    ctx.fill();
+
+    // refracted ray
+    const sin2 = n1*Math.sin(rad1)/n2;
+    const critical = n1 > n2 ? Math.asin(n2/n1)*180/Math.PI : null;
+
+    if(sin2 <= 1){
+      const rad2 = Math.asin(sin2);
+      const rx = cx + Math.sin(rad2)*len;
+      const ry = cy + Math.cos(rad2)*len;
+      ctx.strokeStyle='#22d3ee';
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.lineTo(rx,ry);
+      ctx.stroke();
+
+      const t2 = rad2*180/Math.PI;
+      readout.innerHTML = `زاوية الانكسار θ₂: <strong>${t2.toFixed(1)}</strong>°<br>الزاوية الحرجة: <strong>${critical?critical.toFixed(1)+'°':'—'}</strong><br><span style="color:#22d3ee">انتقال طبيعي</span>`;
+    } else {
+      // total internal reflection
+      const rx = cx + Math.sin(rad1)*len;
+      const ry = cy - Math.cos(rad1)*len;
+      ctx.strokeStyle='#ef4444';
+      ctx.lineWidth=3;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.lineTo(rx,ry);
+      ctx.stroke();
+      readout.innerHTML = `زاوية الانكسار θ₂: <strong>—</strong><br>الزاوية الحرجة: <strong>${critical.toFixed(1)}°</strong><br><span style="color:#ef4444">انعكاس كلي داخلي!</span>`;
+    }
+
+    // angle labels
+    ctx.fillStyle='#f59e0b';
+    ctx.font='12px monospace';
+    ctx.textAlign='left';
+    ctx.fillText('θ₁ = '+angle1+'°', 10, cy-10);
+  }
+
+  return { update, draw };
+})();
+
+// ========== 7. Lens ==========
+const lens = (() => {
+  const {ctx,w,h} = getCtx('lensCanvas');
+  let f = 50, dObj = 100, hObj = 30;
+
+  const readout = document.getElementById('lensReadout');
+  const fS = document.getElementById('lensF');
+  const dS = document.getElementById('lensD');
+  const hS = document.getElementById('lensH');
+  const fV = document.getElementById('lensFval');
+  const dV = document.getElementById('lensDval');
+  const hV = document.getElementById('lensHval');
+
+  fS.oninput = () => { f=+fS.value; fV.textContent=f+' cm'; };
+  dS.oninput = () => { dObj=+dS.value; dV.textContent=dObj+' cm'; };
+  hS.oninput = () => { hObj=+hS.value; hV.textContent=hObj+' cm'; };
+
+  function update(){}
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const cx = w/2;
+    const cy = h/2;
+    const scale = 0.8;
+
+    // optical axis
+    ctx.strokeStyle='rgba(226,232,240,.3)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(0,cy);
+    ctx.lineTo(w,cy);
+    ctx.stroke();
+
+    // lens
+    ctx.strokeStyle='#38bdf8';
+    ctx.lineWidth=2;
+    ctx.fillStyle='rgba(56,189,248,.1)';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 15, 80, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.stroke();
+
+    // focal points
+    const fx1 = cx - f*scale;
+    const fx2 = cx + f*scale;
+    ctx.fillStyle='#f59e0b';
+    [fx1,fx2].forEach(fx=>{
+      ctx.beginPath();
+      ctx.arc(fx, cy, 3, 0, Math.PI*2);
+      ctx.fill();
+    });
+    ctx.font='11px monospace';
+    ctx.textAlign='center';
+    ctx.fillStyle='#f59e0b';
+    ctx.fillText('F', fx1, cy+18);
+    ctx.fillText("F'", fx2, cy+18);
+
+    // object
+    const ox = cx - dObj*scale;
+    const oy = cy - hObj*scale;
+    ctx.strokeStyle='#22c55e';
+    ctx.fillStyle='#22c55e';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(ox, cy);
+    ctx.lineTo(ox, oy);
+    ctx.stroke();
+    // arrowhead
+    ctx.beginPath();
+    ctx.moveTo(ox,oy);
+    ctx.lineTo(ox-6,oy+10);
+    ctx.lineTo(ox+6,oy+10);
+    ctx.fill();
+    ctx.fillStyle='#22c55e';
+    ctx.font='11px monospace';
+    ctx.fillText('Object', ox, cy+30);
+
+    // image calculation
+    const di = 1/(1/f - 1/dObj); // 1/di = 1/f - 1/do
+    const m = -di/dObj;
+    const hi = m*hObj;
+    const ix = cx + di*scale;
+    const iy = cy - hi*scale;
+
+    // draw image
+    if(Math.abs(di) < 1000){
+      ctx.strokeStyle='#a78bfa';
+      ctx.fillStyle='#a78bfa';
+      ctx.setLineDash([5,5]);
+      ctx.beginPath();
+      ctx.moveTo(ix, cy);
+      ctx.lineTo(ix, iy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(ix,iy);
+      ctx.lineTo(ix-6,iy + (hi>0?10:-10));
+      ctx.lineTo(ix+6,iy + (hi>0?10:-10));
+      ctx.fill();
+      ctx.fillStyle='#a78bfa';
+      ctx.fillText('Image', ix, cy+30);
+    }
+
+    // 3 principal rays
+    ctx.strokeStyle='rgba(245,158,11,.6)';
+    ctx.lineWidth=1.5;
+    // ray 1: parallel to axis, through F'
+    ctx.beginPath();
+    ctx.moveTo(ox, oy);
+    ctx.lineTo(cx, oy);
+    ctx.lineTo(ix, iy);
+    ctx.stroke();
+    // ray 2: through center
+    ctx.beginPath();
+    ctx.moveTo(ox, oy);
+    ctx.lineTo(ix, iy);
+    ctx.stroke();
+    // ray 3: through F then parallel
+    ctx.beginPath();
+    ctx.moveTo(ox, oy);
+    ctx.lineTo(cx, cy - (cy-oy)*(f/(dObj-f)));
+    ctx.lineTo(ix, iy);
+    ctx.stroke();
+
+    // readout
+    let type;
+    if(di > 0) type = Math.abs(m) > 1 ? 'حقيقية مكبرة' : 'حقيقية مصغرة';
+    else type = 'تقديرية مكبرة';
+    readout.innerHTML = `بُعد الصورة dᵢ: <strong>${di.toFixed(1)}</strong> cm<br>التكبير m: <strong>${m.toFixed(2)}</strong><br>نوع الصورة: <strong>${type}</strong>`;
+  }
+
+  return { update, draw };
+})();
+
+// ========== 8. Wave Interference ==========
+const waves = (() => {
+  const {ctx,w,h} = getCtx('waveCanvas');
+  let freq = 1.0, sep = 80, vel = 100;
+  let phase = 0;
+
+  const readout = document.getElementById('waveReadout');
+  const fS = document.getElementById('waveFreq');
+  const dS = document.getElementById('waveSep');
+  const vS = document.getElementById('waveVel');
+  const fV = document.getElementById('waveFval');
+  const dV = document.getElementById('waveDval');
+  const vV = document.getElementById('waveVval');
+
+  fS.oninput = () => { freq=+fS.value; fV.textContent=freq.toFixed(1)+' Hz'; };
+  dS.oninput = () => { sep=+dS.value; dV.textContent=sep+' px'; };
+  vS.oninput = () => { vel=+vS.value; vV.textContent=vel+' px/s'; };
+
+  function update(dt){
+    phase += dt*vel;
+    const lambda = vel/freq;
+    readout.innerHTML = `الطول الموجي λ = v/f: <strong>${lambda.toFixed(0)}</strong> px<br>عدد الخطوط العقدية: <strong>${Math.floor(2*sep/lambda)+1}</strong>`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+
+    const sx1 = w/2 - sep/2;
+    const sx2 = w/2 + sep/2;
+    const sy = h/2;
+    const lambda = vel/freq;
+
+    // draw as radial waves using circles
+    ctx.globalAlpha = 0.15;
+    for(let r = phase % lambda; r < Math.max(w,h); r += lambda){
+      // source 1
+      ctx.strokeStyle = Math.floor((r/lambda) % 2) === 0 ? '#38bdf8' : '#0ea5e9';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(sx1, sy, r, 0, Math.PI*2);
+      ctx.stroke();
+      // source 2
+      ctx.strokeStyle = Math.floor((r/lambda) % 2) === 0 ? '#a78bfa' : '#8b5cf6';
+      ctx.beginPath();
+      ctx.arc(sx2, sy, r, 0, Math.PI*2);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // sources
+    ctx.fillStyle='#38bdf8';
+    ctx.beginPath();
+    ctx.arc(sx1,sy,6,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle='#a78bfa';
+    ctx.beginPath();
+    ctx.arc(sx2,sy,6,0,Math.PI*2);
+    ctx.fill();
+
+    // nodal lines (where path diff = (n+0.5)λ)
+    const ratio = sep / lambda;
+    const nodes = Math.floor(ratio);
+    ctx.strokeStyle='rgba(239,68,68,.7)';
+    ctx.lineWidth=2;
+    ctx.setLineDash([3,3]);
+    for(let i=-nodes;i<=nodes;i++){
+      const n = i + 0.5;
+      const angle = Math.asin(n*lambda/sep);
+      // draw hyperbola arms
+      const L = Math.max(w,h)*1.5;
+      const dir = Math.sign(i) || 1;
+      const ax = Math.sin(angle)*L;
+      const ay = Math.cos(angle)*L;
+      ctx.beginPath();
+      ctx.moveTo(w/2, h/2);
+      ctx.lineTo(w/2 + ax, h/2 + ay);
+      ctx.moveTo(w/2, h/2);
+      ctx.lineTo(w/2 - ax, h/2 - ay);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+  }
+
+  return { update, draw };
+})();
+
+// ========== 9. Boyle's Law ==========
+const gas = (() => {
+  const {ctx,w,h} = getCtx('gasCanvas');
+  let V = 100, T = 300;
+  const particles = [];
+  for(let i=0;i<30;i++){
+    particles.push({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random()-0.5)*0.6,
+      vy: (Math.random()-0.5)*0.6
+    });
+  }
+
+  const readout = document.getElementById('gasReadout');
+  const vS = document.getElementById('gasVol');
+  const tS = document.getElementById('gasTemp');
+  const vV = document.getElementById('gasVval');
+  const tV = document.getElementById('gasTval');
+
+  vS.oninput = () => { V=+vS.value; vV.textContent=V+'%'; };
+  tS.oninput = () => { T=+tS.value; tV.textContent=T+' K'; };
+
+  function update(dt){
+    const speed = Math.sqrt(T/300);
+    particles.forEach(p=>{
+      p.x += p.vx*dt*speed;
+      p.y += p.vy*dt*speed;
+      if(p.x<0){p.x=0;p.vx=-p.vx;}
+      if(p.x>1){p.x=1;p.vx=-p.vx;}
+      if(p.y<0){p.y=0;p.vy=-p.vy;}
+      if(p.y>1){p.y=1;p.vy=-p.vy;}
+    });
+    const P = (100/V) * (T/300);
+    readout.innerHTML = `الضغط P: <strong>${P.toFixed(2)}</strong> atm<br>P·V: <strong>${(P*V/100).toFixed(2)}</strong><br>عدد الجزيئات: <strong>ثابت</strong>`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+
+    const cylW = 200;
+    const cylH = 300;
+    const cx = w/2;
+    const cy = h/2;
+    const x = cx - cylW/2;
+    const top = cy - cylH/2;
+    const bottom = cy + cylH/2;
+
+    // gas region
+    const gasTop = top + (100-V)/100*cylH;
+    const grad = ctx.createLinearGradient(0,gasTop,0,bottom);
+    grad.addColorStop(0,'rgba(56,189,248,.05)');
+    grad.addColorStop(1,'rgba(56,189,248,.25)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, gasTop, cylW, cylH - (gasTop-top));
+
+    // particles
+    ctx.fillStyle='#22d3ee';
+    particles.forEach(p=>{
+      const px = x + p.x*cylW;
+      const py = gasTop + p.y*(bottom-gasTop);
+      ctx.beginPath();
+      ctx.arc(px, py, 3, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    // piston
+    ctx.fillStyle='#475569';
+    ctx.fillRect(x-10, gasTop-15, cylW+20, 15);
+    ctx.fillStyle='#64748b';
+    ctx.fillRect(cx-15, top-40, 30, 25);
+    ctx.strokeStyle='#94a3b8';
+    ctx.lineWidth=2;
+    ctx.strokeRect(x, top, cylW, cylH);
+
+    // volume label
+    ctx.fillStyle='#38bdf8';
+    ctx.font='bold 14px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('V = '+V+'%', cx, bottom+25);
+    ctx.fillStyle='#a78bfa';
+    ctx.fillText('P = '+(100/V).toFixed(2)+' atm', cx, top-55);
+    ctx.textAlign='right';
+  }
+
+  return { update, draw };
+})();
+
+// ========== 10. Newton's 2nd Law ==========
+const nwt = (() => {
+  const {ctx,w,h} = getCtx('newtonCanvas');
+  let state = { x: 0, v: 0, t: 0 };
+  let F = 20, m = 2, mu = 0.1;
+  const g = 9.8;
+
+  const readout = document.getElementById('nwtReadout');
+  const fS = document.getElementById('nwtForce');
+  const mS = document.getElementById('nwtMass');
+  const uS = document.getElementById('nwtMu');
+  const fV = document.getElementById('nwtFval');
+  const mV = document.getElementById('nwtMval');
+  const uV = document.getElementById('nwtMuval');
+
+  fS.oninput = () => { F=+fS.value; fV.textContent=F+' N'; };
+  mS.oninput = () => { m=+mS.value; mV.textContent=m.toFixed(1)+' kg'; };
+  uS.oninput = () => { mu=+uS.value; uV.textContent=mu.toFixed(2); };
+
+  function reset(){ state = { x:0, v:0, t:0 }; }
+
+  function update(dt){
+    state.t += dt;
+    const friction = mu*m*g;
+    let net = F - friction;
+    if(state.v === 0 && net <= 0) net = 0;
+    const a = net/m;
+    state.v += a*dt;
+    if(state.v < 0){ state.v = 0; }
+    state.x += state.v*dt;
+    if(state.x > 10){ state.x = 10; state.v = 0; }
+    readout.innerHTML = `التسارع a: <strong>${a.toFixed(2)}</strong> m/s²<br>السرعة v: <strong>${state.v.toFixed(2)}</strong> m/s<br>المسافة: <strong>${state.x.toFixed(2)}</strong> m`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    drawGrid(ctx,w,h);
+    const pad = 40;
+    const groundY = h - pad;
+    const scale = (w - pad*2) / 10;
+
+    // ground
+    ctx.fillStyle='#1e293b';
+    ctx.fillRect(0, groundY, w, 5);
+
+    // block
+    const bx = pad + state.x*scale;
+    const bw = 60;
+    const bh = 60;
+    ctx.fillStyle='#38bdf8';
+    ctx.shadowColor='#38bdf8';
+    ctx.shadowBlur=15;
+    ctx.fillRect(bx, groundY-bh, bw, bh);
+    ctx.shadowBlur=0;
+
+    // mass label
+    ctx.fillStyle='#0a0e1a';
+    ctx.font='bold 14px monospace';
+    ctx.textAlign='center';
+    ctx.fillText(m+'kg', bx+bw/2, groundY-bh/2+5);
+
+    // force arrow
+    if(F > 0){
+      ctx.strokeStyle='#ef4444';
+      ctx.fillStyle='#ef4444';
+      ctx.lineWidth=3;
+      const fx = bx+bw+20;
+      const fy = groundY-bh/2;
+      ctx.beginPath();
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(fx+60, fy);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(fx+60, fy);
+      ctx.lineTo(fx+50, fy-8);
+      ctx.lineTo(fx+50, fy+8);
+      ctx.fill();
+      ctx.font='12px monospace';
+      ctx.fillText('F='+F+'N', fx+30, fy-15);
+    }
+
+    // velocity arrow
+    if(state.v > 0){
+      ctx.strokeStyle='#22c55e';
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(bx, groundY-bh-20);
+      ctx.lineTo(bx+Math.min(state.v*10,80), groundY-bh-20);
+      ctx.stroke();
+    }
+
+    ctx.textAlign='right';
+  }
+
+  return { update, draw, reset };
+})();
+
+// ========== Tab switching ==========
+const expMap = {
+  freefall: ff,
+  projectile: proj,
+  pendulum: pend,
+  spring: spr,
+  ohms: ohm,
+  refraction: refr,
+  lens: lens,
+  waves: waves,
+  gas: gas,
+  newton: nwt
+};
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const id = tab.dataset.tab;
+    document.getElementById(id).classList.add('active');
+    activeExp = expMap[id];
+    // re-init canvas on switch (in case of resize)
+    setTimeout(()=>{
+      // trigger redraw
+      if(activeExp && activeExp.draw) activeExp.draw();
+    }, 50);
+  };
+});
+
+// ========== Init ==========
+window.addEventListener('load', () => {
+  activeExp = ff;
+  // init all readouts
+  proj.reset();
+  pend.reset();
+  spr.reset();
+});
+
+// re-init canvas on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    // simple redraw — canvases will reinit on next tab switch
+    if(activeExp && activeExp.draw) activeExp.draw();
+  }, 300);
+});
+</script>
+</body>
+</html>
