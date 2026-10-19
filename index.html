@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>محاكي الدوائر المنطقية</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="toolbar">
+  <h1>محاكي الدوائر المنطقية</h1>
+  <div class="actions">
+    <button id="btn-run" class="primary">تشغيل</button>
+    <button id="btn-stop">إيقاف</button>
+    <button id="btn-clear">مسح</button>
+    <button id="btn-save">حفظ</button>
+    <button id="btn-load">استرجاع</button>
+    <button id="btn-export">تصدير JSON</button>
+    <button id="btn-import">استيراد JSON</button>
+    <button id="btn-theme">الوضع الفاتح</button>
+    <input type="file" id="file-input" accept=".json,application/json" hidden>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>القطع</h2>
+    <div class="tools">
+      <button class="tool" draggable="true" data-type="SWITCH">مفتاح SWITCH</button>
+      <button class="tool" draggable="true" data-type="CLOCK">ساعة CLOCK</button>
+      <button class="tool" draggable="true" data-type="AND">AND</button>
+      <button class="tool" draggable="true" data-type="OR">OR</button>
+      <button class="tool" draggable="true" data-type="NOT">NOT</button>
+      <button class="tool" draggable="true" data-type="NAND">NAND</button>
+      <button class="tool" draggable="true" data-type="NOR">NOR</button>
+      <button class="tool" draggable="true" data-type="XOR">XOR</button>
+      <button class="tool" draggable="true" data-type="LED">LED</button>
+    </div>
+    <p class="hint">اسحب القطعة إلى مساحة العمل أو اضغط عليها. اسحب من نقطة التوصيل لرسم سلك. اضغط على المفتاح لتغيير قيمته.</p>
+  </aside>
+  <main class="canvas-wrap"><canvas id="board"></canvas></main>
+  <aside class="props">
+    <h2>الخصائص</h2>
+    <div id="prop-info">لا يوجد عنصر محدد.</div>
+    <button id="btn-delete" class="danger" hidden>حذف العنصر (Delete)</button>
+  </aside>
+</div>
+<footer id="status">جاهز</footer>
+<script src="js/components.js"></script>
+<script src="js/wiring.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
