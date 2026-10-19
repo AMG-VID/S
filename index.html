@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معمل الكيمياء الافتراضي</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🧪 معمل الكيمياء الافتراضي</h1>
+  <p>310 مادة كيميائية • 120 تجربة • بدون قواعد بيانات • بدون ذكاء اصطناعي</p>
+</header>
+
+<nav>
+  <button class="tab active" data-tab="materials">المواد الكيميائية</button>
+  <button class="tab" data-tab="experiments">التجارب</button>
+  <button class="tab" data-tab="safety">السلامة</button>
+  <button class="tab" data-tab="about">عن المشروع</button>
+</nav>
+
+<main>
+  <section id="materials" class="panel active">
+    <div class="controls">
+      <input type="text" id="searchMaterials" placeholder="ابحث بالاسم أو الرمز أو الصيغة...">
+      <select id="filterCategory">
+        <option value="">كل الفئات</option>
+        <option value="عنصر">عناصر</option>
+        <option value="حمض">أحماض</option>
+        <option value="قاعدة">قواعد</option>
+        <option value="ملح">أملاح</option>
+        <option value="أكسيد">أكاسيد</option>
+        <option value="عضوي">عضوية</option>
+        <option value="سبيكة">سبائك</option>
+        <option value="خاص">مواد خاصة</option>
+      </select>
+    </div>
+    <div id="materialsGrid" class="grid"></div>
+  </section>
+
+  <section id="experiments" class="panel">
+    <div class="controls">
+      <input type="text" id="searchExperiments" placeholder="ابحث في التجارب...">
+      <select id="filterExpCat">
+        <option value="">كل الأقسام</option>
+        <option value="تحليلية">تحليلية</option>
+        <option value="عضوية">عضوية</option>
+        <option value="فيزيائية">فيزيائية</option>
+        <option value="غير عضوية">غير عضوية</option>
+        <option value="حيوية">حيوية وبيئية</option>
+      </select>
+    </div>
+    <div id="experimentsGrid" class="grid"></div>
+  </section>
+
+  <section id="safety" class="panel">
+    <h2>⚠️ إرشادات السلامة العامة</h2>
+    <ul class="safety-list">
+      <li>ارتدِ النظارات الواقية والقفازات دائمًا.</li>
+      <li>لا تخلط مواد كيميائية دون معرفة تفاعلاتها.</li>
+      <li>اعمل في مكان جيد التهوية.</li>
+      <li>احتفظ بطفاية حريق ومصدر ماء قريب.</li>
+      <li>اقرأ بطاقة SDS لكل مادة قبل الاستخدام.</li>
+      <li>لا تذق أو تشم أي مادة كيميائية مباشرة.</li>
+      <li>تخلص من النفايات الكيميائية وفق اللوائح.</li>
+    </ul>
+  </section>
+
+  <section id="about" class="panel">
+    <h2>عن المشروع</h2>
+    <p>معمل كيمياء افتراضي مفتوح المصدر يحتوي على 310 مادة كيميائية و120 تجربة علمية.</p>
+    <p><strong>التقنيات:</strong> HTML + CSS + JavaScript + JSON فقط.</p>
+    <p><strong>لا يوجد:</strong> قاعدة بيانات، ذكاء اصطناعي، خادم، أو ربط بمناهج دراسية.</p>
+    <p><strong>المعايير:</strong> ISEF العلمية العالمية.</p>
+    <p><strong>الرخصة:</strong> مفتوحة للاستخدام التعليمي والبحثي.</p>
+  </section>
+</main>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  <p>معمل الكيمياء الافتراضي © 2026 — بدون قواعد بيانات، بدون AI</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
